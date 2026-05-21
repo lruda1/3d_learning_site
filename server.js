@@ -38,7 +38,7 @@ require('dotenv').config();
 
 // CORS: тільки для фронтенду
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'https://threed-learning-site.onrender.com',
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
@@ -53,7 +53,6 @@ app.get('/api/test', (req, res) => {
   res.json({ ok: true });
 });
 
-  const PORT = process.env.PORT || 3000;
   const SECRET_KEY = process.env.SECRET_KEY;
   
   const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
@@ -790,8 +789,14 @@ app.get('*', (req, res, next) => {
 });
 
 // Запуск сервера
-app.listen(PORT, () => console.log(`✅ Сервер запущено: http://localhost:${PORT}`));
-
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('✅ MongoDB connected'))
-  .catch(err => console.error('❌ MongoDB error:', err));
+  .then(() => {
+    console.log('✅ MongoDB connected');
+
+    app.listen(PORT, () => {
+      console.log(`✅ Server running on port ${PORT}`);
+    });
+  })
+  .catch(err => {
+    console.error('❌ MongoDB error:', err);
+  });

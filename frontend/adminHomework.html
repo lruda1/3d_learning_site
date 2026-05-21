@@ -70,7 +70,7 @@ align-items: center;
   <script>
     async function loadHomework() {
       const langFilter = document.getElementById('langFilter').value;
-      const res = await fetch('http://localhost:3000/api/admin/homework', {
+      const res = await fetch('https://threed-learning-site.onrender.com/api/admin/homework', {
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
       });
   
@@ -97,7 +97,7 @@ align-items: center;
         // Отримуємо дані користувача
         let user = null;
         try {
-          const res = await fetch(`http://localhost:3000/api/users/${hw.userEmail}`, {
+          const res = await fetch(`https://threed-learning-site.onrender.com/api/users/${hw.userEmail}`, {
             headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
           });
           if (res.ok) user = await res.json();
@@ -133,7 +133,7 @@ align-items: center;
       const textarea = document.querySelector(`textarea[data-id="${id}"]`);
       const comment = textarea.value;
   
-      fetch(`http://localhost:3000/api/admin/homework/${id}/comment`, {
+      fetch(`https://threed-learning-site.onrender.com/api/admin/homework/${id}/comment`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -355,8 +355,10 @@ document.getElementById('languageSelect').addEventListener('change', e => {
 </script>
 
   <script>
-    const API_URL = 'http://localhost:3000/api';
-  
+const API_URL =
+'https://threed-learning-site.onrender.com/api';
+
+
     document.getElementById('languageSelect').addEventListener('change', (e) => {
       const selectedLang = e.target.value;
       localStorage.setItem('language', selectedLang);
