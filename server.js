@@ -53,7 +53,6 @@ app.get('/api/test', (req, res) => {
   res.json({ ok: true });
 });
 
-const PORT = process.env.PORT || 3000;
 
   const SECRET_KEY = process.env.SECRET_KEY;
   
@@ -790,8 +789,10 @@ app.get('*', (req, res, next) => {
   res.sendFile(path.join(__dirname, 'frontend/choise.html'));
 });
 
+const PORT = process.env.PORT || 3000;
+
 // Запуск сервера
-  mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('MongoDB connected');
 
