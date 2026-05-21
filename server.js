@@ -791,7 +791,6 @@ app.get('*', (req, res, next) => {
 
 const PORT = process.env.PORT || 3000;
 
-// Запуск сервера
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('MongoDB connected');
@@ -800,4 +799,6 @@ mongoose.connect(process.env.MONGO_URI)
       console.log(`Server running on ${PORT}`);
     });
   })
-  .catch(console.error);
+  .catch(err => {
+    console.error('MongoDB error:', err);
+  });
