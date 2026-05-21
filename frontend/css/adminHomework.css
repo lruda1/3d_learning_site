@@ -1,0 +1,316 @@
+body {
+    background-color: #0d1117;
+    color: #c9d1d9;
+    margin: 0; padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateX(0px);
+    animation: slideIn 2s forwards cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  
+  @keyframes slideIn {
+    to {
+      opacity: 1;
+    }
+  }
+  .badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    padding: 2px 6px;
+  }
+  h1 {
+    text-align: center;
+    margin-top: 20px;
+  }
+  form {
+    max-width: 500px;
+    margin: 20px auto;
+    background: #161b22;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  input, textarea, button {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    font-size: 14px;
+    background: #0d1117;
+    color: #c9d1d9;
+  }
+  button {
+    background: #238636;
+    cursor: pointer;
+    font-family: 'Aksent', sans-serif;
+  }
+  ul {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    background: #21262d;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  li button {
+    background: #f85149;
+    padding: 5px 10px;
+  }
+
+
+  button {
+    background: linear-gradient(90deg, #1f6feb, #58a6ff);
+    color: #000000;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 0 8px rgba(88, 166, 255, 0.3);
+  }
+  
+  button:hover {
+    background: linear-gradient(90deg, #388bfd, #79c0ff);
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(88, 166, 255, 0.5);
+  }
+  
+  button:active {
+    transform: scale(0.98);
+  background: #1f6feb;
+  box-shadow: 0 0 6px rgba(31, 111, 235, 0.4);
+  }
+  
+  #homework-list{
+    margin: 10px;
+
+  }
+
+  .filter-container {
+  margin: 10px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-container label {
+  font-weight: bold;
+  color: #c9d1d9;
+}
+
+.filter-container select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #58a6ff;
+  background: #161b22;
+  color: #c9d1d9;
+  text-align: center;
+  text-align-last: center;
+  cursor: pointer;  
+  transition: border 0.3s, background 0.3s;
+}
+
+.filter-container select:hover {
+  background-color: #21262d;
+  border-color: #1f6feb;
+}
+
+
+.homework-item textarea {
+  max-width: 100%;  
+  max-height: 300px;
+  min-height: 80px; 
+  padding: 8px;
+  background-color: #0d1117;
+  color: #c9d1d9;
+  border: 1px solid #162030;
+  border-radius: 8px;
+  line-height: 1.4;
+  box-sizing: border-box;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+.homework-item textarea:focus {
+  border-color: #1f6feb;
+  background-color: #161b22;
+  outline: none;
+}
+
+/* 🖥️ Великі екрани (1025px – 1920px) */
+@media (min-width: 1025px) {
+  body {
+    font-size: 16px;
+  }
+
+  form, ul {
+    max-width: 600px;
+  }
+
+  .filter-container {
+    justify-content: flex-start;
+  }
+}
+
+/* 💻 Планшети (до 1024px) */
+@media (max-width: 1024px) {
+  body {
+    font-size: 15px;
+  }
+
+  form {
+    max-width: 90%;
+    padding: 15px;
+  }
+
+  ul {
+    max-width: 90%;
+  }
+
+  .filter-container {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  button {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+
+  li {
+    padding: 10px;
+  }
+}
+
+/* 📱 Мобільні телефони (до 768px) */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 1.2rem;
+    margin-top: 15px;
+  }
+
+  form {
+    width: 90%;
+    margin: 15px auto;
+    padding: 12px;
+  }
+
+  input,
+  textarea,
+  button {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  ul {
+    width: 90%;
+    margin: 10px auto;
+  }
+
+  li {
+    padding: 8px;
+  }
+
+  .filter-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .filter-container label {
+    font-size: 13px;
+  }
+
+  .filter-container select {
+    width: 100%;
+    font-size: 13px;
+  }
+
+  button {
+    width: 100%;
+  }
+}
+
+/* 📱 Дуже маленькі телефони (до 480px) */
+@media (max-width: 480px) {
+  body {
+    font-size: 13px;
+  }
+
+  h1 {
+    font-size: 1rem;
+  }
+
+  form {
+    width: 95%;
+    padding: 10px;
+  }
+
+  input,
+  textarea,
+  button {
+    font-size: 12px;
+    padding: 7px;
+  }
+
+  .filter-container {
+    width: 95%;
+  }
+
+  .filter-container label {
+    font-size: 12px;
+  }
+
+  .filter-container select {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+
+  li {
+    padding: 6px;
+    font-size: 13px;
+  }
+
+  .homework-item textarea {
+    min-height: 70px;
+    font-size: 13px;
+  }
+}
+
+/* 📱 Надмалі екрани (до 360px) */
+@media (max-width: 360px) {
+  h1 {
+    font-size: 0.9rem;
+  }
+
+  button {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  input,
+  textarea {
+    font-size: 12px;
+  }
+
+  .filter-container {
+    gap: 4px;
+  }
+}

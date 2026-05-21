@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'Aksent';
+    src: url('font/Pexico_Micro_Regular.otf') format('truetype');
+  }
+
+  body {
+    font-family: 'Aksent', sans-serif;
+  }

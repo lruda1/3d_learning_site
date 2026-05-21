@@ -1,0 +1,445 @@
+body {
+    background-color: #0d1117;
+    color: #c9d1d9;
+    margin: 0; padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateX(0px);
+    animation: slideIn 2s forwards cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  
+  main {
+    padding: 20px;
+  }
+ 
+  @keyframes slideIn {
+    to {
+      opacity: 1;
+    }
+  }
+  
+  
+  .locked {
+    text-align: center;
+    font-size: 20px;
+    color: #8b949e;
+    margin-top: 100px;
+  }
+  .lesson-list {
+    margin-bottom: 20px;
+  }
+
+  video {
+    width: 100%;
+    max-height: 400px;
+    background: black;
+    border-radius: 8px;
+  }
+  .progress-container {
+    margin-top: 10px;
+    background: #30363d;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 12px;
+  }
+  .progress-bar {
+    height: 100%;
+    background: #58a6ff;
+    width: 0;
+    transition: width 0.3s ease;
+  }
+  .chat {
+    margin-top: 20px;
+    background: #161b22;
+    padding: 10px;
+    border-radius: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  .chat-message {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #30363d;
+    padding-bottom: 5px;
+  }
+  form.comment-form {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+  }
+  form.comment-form textarea {
+    flex-grow: 1;
+    resize: none;
+    height: 60px;
+    border-radius: 5px;
+    border: none;
+    padding: 8px;
+    font-size: 14px;
+    background-color: #0d1117;
+    color: #c9d1d9;
+  }
+  form.comment-form button {
+    background: #238636;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .homework-comment {
+    background: #21262d;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 10px;
+    font-style: italic;
+    color: #58a6ff;
+  }
+  .auth {
+    max-width: 400px;
+    margin: 50px auto;
+    background: #161b22;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  .auth input {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    background: #0d1117;
+    color: #c9d1d9;
+  }
+  .auth button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background: #238636;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .error {
+    color: #f85149;
+    margin-bottom: 10px;
+  }
+  
+  .btn-submit {
+    background: #276bca;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-submit:hover {
+    background: #2a77e3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+  
+  .btn-submit:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+
+  #videoSection h2 {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 5px;
+    color: #c9d1d9;
+  }
+  
+  .right-side h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #58a6ff;
+  }
+  
+
+
+  
+  .content-container {
+    margin-left: 100px;
+    margin-right: 100px;
+  }
+  
+  .left-side video {
+    width: 100%;
+    max-width: 1020px;
+    max-height: 800px;
+    border-radius: 10px;
+    border: 2px solid #30363d;
+  }
+  
+  .right-side {
+    flex: 1;
+    border-radius: 10px;
+    padding: 15px;
+    overflow-y: auto;
+    min-height: 470px;
+    scrollbar-width: thin;
+    max-height: 470px;
+    min-width: 40%;
+    margin-top: 47px;
+    background-color: #0a0d12; 
+
+  }
+  
+  .lesson-item {
+    background: #21262d;
+    color: #c9d1d9;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .lesson-item:hover {
+    background: #30363d;
+    transform: scale(1.02);
+  }
+  
+  .lesson-item.selected {
+    border: 2px solid #1f6feb;
+    box-shadow: 0 0 10px rgba(31,111,235,0.5);
+  }
+  
+  
+  .lesson-title-search:hover {
+    border-color: #58a6ff;
+    box-shadow: 0 0 8px rgba(88,166,255,0.5);
+  }
+  
+  .lesson-title-search {
+    display: flex;
+    border-radius: 50px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    cursor: default;
+    font-size: 16px;
+    font-weight: 500;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .lesson-title-left {
+    flex: 1;
+    background-color: #161b22; 
+    color: #c9d1d9;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    white-space: wrap;
+    overflow: hidden;
+  }
+  
+  
+  
+  .lesson-title-right {
+    width: 50px;
+    background-color: #161b22;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #8b949e;
+    border: 2px solid #161b22;
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+
+  }
+  
+  .lesson-title-search:hover .lesson-title-left {
+    background-color: #21262d;
+  }
+  
+  .lesson-title-search:hover .lesson-title-right {
+    background-color: #1f6feb;
+    color: #fff;
+    border-color: #58a6ff;
+    border: 2px solid #1f6feb;
+    box-shadow: 0 0 10px rgba(31,111,235,0.5);
+  }
+  
+
+/* Мобільні телефони */
+@media (max-width: 768px) {
+  .content-container {
+    flex-direction: column;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .left-side video {
+    max-width: 100%;
+    max-height: 300px;
+  }
+
+  .right-side {
+    min-width: 100%;
+    max-height: 300px;
+    margin-top: 15px;
+    padding: 10px;
+  }
+
+  .lesson-title-search {
+    font-size: 14px;
+  }
+
+  .lesson-title-right {
+    width: 40px;
+    font-size: 16px;
+  }
+
+  .btn-submit {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+}
+
+/* Планшети */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .content-container {
+    flex-direction: column;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .left-side video {
+    max-width: 100%;
+    max-height: 500px;
+  }
+
+  .right-side {
+    min-width: 100%;
+    max-height: 400px;
+    margin-top: 20px;
+    padding: 12px;
+  }
+
+  .lesson-title-search {
+    font-size: 15px;
+  }
+
+  .lesson-title-right {
+    width: 45px;
+    font-size: 17px;
+  }
+
+  .btn-submit {
+    font-size: 15px;
+    padding: 11px 22px;
+  }
+}
+
+/* Десктопи (1025px і більше) */
+@media (min-width: 1025px) {
+  .content-container {
+    flex-direction: row;
+    margin-left: 100px;
+    margin-right: 100px;
+  }
+
+  .left-side video {
+    max-width: 1020px;
+    max-height: 800px;
+  }
+
+  .right-side {
+    min-width: 40%;
+    max-height: 470px;
+  }
+}
+
+/* Дуже малі екрани (до 480px) */
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+
+  main {
+    padding: 10px;
+  }
+
+  .content-container {
+    flex-direction: column;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+
+  .left-side video {
+    max-width: 100%;
+    max-height: 220px;
+    border-radius: 6px;
+  }
+
+  .right-side {
+    min-width: 100%;
+    max-height: 250px;
+    margin-top: 10px;
+    padding: 8px;
+    border-radius: 8px;
+  }
+
+  .lesson-title-search {
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+
+  .lesson-title-left {
+    padding: 6px 10px;
+  }
+
+  .lesson-title-right {
+    width: 35px;
+    font-size: 14px;
+  }
+
+  .lesson-item {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .btn-submit {
+    font-size: 13px;
+    padding: 8px 16px;
+    width: 100%;
+  }
+
+  form.comment-form textarea {
+    height: 50px;
+    font-size: 13px;
+  }
+
+  .chat {
+    max-height: 200px;
+    padding: 8px;
+  }
+
+  .chat-message {
+    font-size: 13px;
+    padding-bottom: 4px;
+  }
+
+  .auth {
+    max-width: 300px;
+    margin: 30px auto;
+    padding: 15px;
+  }
+
+  .auth input, .auth button {
+    font-size: 14px;
+    padding: 7px;
+  }
+}

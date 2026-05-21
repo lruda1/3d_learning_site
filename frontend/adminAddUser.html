@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Додати урок</title>
+
+  <link rel="stylesheet" href="css/fonStyles.css">    
+  <link rel="stylesheet" href="css/adminAddUser.css">
+  <link rel="stylesheet" href="css/navStyles.css">
+  <link rel="stylesheet" href="css/navStylesAdmin.css">
+
+</head>
+<body>
+  <header>
+    <div class="logo">AI-курс з нуля</div>
+  
+    <nav class="nav-links-admin">
+      <div class="nav-left">
+        <a href="index.html">Головна</a>
+        <a href="lessons.html">Уроки</a>
+        <a href="homework.html" id="homeworkLink">Домашні завдання</a>
+      </div>
+  
+      <div class="nav-right">
+        <a href="admin.html" class="admin-link" style="color: #58a6ff;">Додати урок</a>
+        <a href="adminHomework.html" class="admin-link"style="color: #58a6ff;">Домашні роботи користувачів</a>
+        <a href="adminAddUser.html" class="admin-link active"style="color: #58a6ff;">Додати користувача</a>
+      </div>
+    </nav>
+
+    <select id="mobileNav" class="mobile-nav">
+      <option value="index.html">Головна</option>
+      <option value="lessons.html">Уроки</option>
+      <option value="homework.html">Домашні завдання</option>
+      <option value="admin.html" style="color: #58a6ff;">Додати урок</option>
+      <option value="adminHomework.html" style="color: #58a6ff;">Домашні роботи користувачів</option>
+      <option value="adminAddUser.html" style="color: #58a6ff;">Додати користувача</option>
+    </select>
+    
+  </header>
+
+    <!-- Модальне вікно реєстрації -->
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeRegisterModal()">&times;</span>
+      <h2>Реєстрація</h2>
+      <div id="registerError" class="error"></div>
+      
+      <input type="text" id="regName" placeholder="Ім'я" required />
+      <input type="email" id="regEmail" placeholder="Email" required />
+            
+      <div class="password-wrapper">
+        <input type="password" id="regPassword" placeholder="Пароль" required />
+        <span class="toggle-password" onclick="togglePassword('regPassword')">👁️</span>
+      </div>
+  
+      <div class="password-wrapper">
+        <input type="password" id="regConfirm" placeholder="Підтвердити пароль" required />
+        <span class="toggle-password" onclick="togglePassword('regConfirm')">👁️</span>
+      </div>
+  
+      <div class="custom-file">
+        <input type="file" id="regPhoto" accept="image/*" style="display:none; " onchange="updateFileName()" />
+        <button type="button" onclick="document.getElementById('regPhoto').click()" id="fileBtn">Оберіть файл</button>
+        <span id="fileName">Файл не вибрано</span>
+      </div>
+      <button onclick="handleRegister()">Зареєструватися</button>
+    </div>
+  </div>
+  
+  <!-- Модальне вікно редагування -->
+<div id="editUserModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeEditModal()">&times;</span>
+    <h2>Редагувати користувача</h2>
+    <div id="editError" class="error"></div>
+
+    <input type="text" id="editName" placeholder="Імʼя" />
+    <input type="email" id="editEmail" placeholder="Email" />
+
+    <div class="password-wrapper">
+      <input type="password" id="editPassword" placeholder="Новий пароль (не обовʼязково)" />
+      <span class="toggle-password" onclick="togglePassword('editPassword')">👁️</span>
+    </div>
+
+    <div class="custom-file">
+      <input type="file" id="editPhoto" accept="image/*" style="display:none;" onchange="updateEditFileName()" />
+      <button type="button" onclick="document.getElementById('editPhoto').click()" id="editFileBtn">Оберіть фото</button>
+      <span id="editFileName">Файл не вибрано</span>
+    </div>
+
+    <button onclick="saveUserEdit()">Зберегти зміни</button>
+  </div>
+</div>
+
+  <div id="usersListContainer">
+    <h3>Користувачі в базі:</h3>
+    <ul id="usersList"></ul>
+
+    <button onclick="openRegisterModal()" id="registerLink">Зареєструвати нового користувача</button>
+  </div>
+
+  <!-- Модальне вікно підтвердження -->
+<div id="confirmModal" class="custom-modal hidden">
+  <div class="custom-modal-content">
+    <p id="confirmMessage"></p>
+    <div class="modal-buttons">
+      <button id="confirmYes">✅ Так</button>
+      <button id="confirmNo">❌ Ні</button>
+    </div>
+  </div>
+</div>
+
+  <div id="toastContainer" style="
+position: fixed;
+top: 20px;
+left: 50%;
+transform: translateX(-50%);
+display: flex;
+flex-direction: column;
+gap: 10px;
+z-index: 9999;
+align-items: center;
+"></div>
+
+  <script>
+    const API_URL = 'http://localhost:3000/api';
+    
+    // ======= ГОЛОВНА ФУНКЦІЯ ДЛЯ ЗАПИТІВ =======
+    async function apiRequest(endpoint, method = 'GET', data = null, isFormData = false) {
+      const options = { method };
+      
+      if (data) {
+        if (isFormData) {
+          options.body = data;
+        } else {
+          options.headers = { 'Content-Type': 'application/json' };
+          options.body = JSON.stringify(data);
+        }
+      }
+    
+      const res = await fetch(API_URL + endpoint, options);
+      if (!res.ok) throw new Error(`Помилка ${res.status}`);
+      return await res.json();
+    }
+    
+    function showError(msg, el = 'errorMsg') {
+      document.getElementById(el).textContent = msg;
+    }
+    
+    // ======= МОДАЛЬНЕ ВІКНО =======
+    function openRegisterModal() {
+      document.getElementById('registerModal').style.display = 'block';
+    }
+    function closeRegisterModal() {
+      document.getElementById('registerModal').style.display = 'none';
+    }
+    window.onclick = function(event) {
+      if (event.target == document.getElementById('registerModal')) closeRegisterModal();
+    };
+    
+    // ======= ОНОВЛЕННЯ СПИСКУ КОРИСТУВАЧІВ =======
+    async function fetchUsers() {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch('http://localhost:3000/api/users', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    if (!response.ok) throw new Error('Помилка ' + response.status);
+
+    const users = await response.json();
+    console.log('Список користувачів:', users);
+
+const usersList = document.getElementById('usersList');
+usersList.innerHTML = users.map(u => `
+  <li class="user">
+    <div class="user-info">
+      <img src="${u.avatarUrl || 'img/default-avatar.png'}" alt="avatar">
+      <div>
+        <span>${u.name}</span><br>
+        <span class="user-email">${u.email}</span>
+      </div>
+    </div>
+    <div class="user-actions">
+      <button class="edit-btn" onclick="openEditModal('${u._id}', '${u.name}', '${u.email}')">✏️</button>
+      <button class="delete-btn" onclick="deleteUser('${u._id}')">🗑️</button>
+    </div>
+  </li>
+`).join('');
+
+  } catch (err) {
+    console.error('Помилка при завантаженні користувачів:', err);
+  }
+}
+
+async function deleteUser(id) {
+  if (!confirm('Видалити користувача?')) return;
+
+  const token = localStorage.getItem('token');
+  await fetch(`${API_URL}/users/${id}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+  fetchUsers();
+}
+
+let currentUserId = null;
+
+// Відкрити модальне вікно для редагування
+function openEditModal(id, name, email) {
+  currentUserId = id;
+  document.getElementById('editName').value = name || '';
+  document.getElementById('editEmail').value = email || '';
+  document.getElementById('editPassword').value = '';
+  document.getElementById('editFileName').textContent = 'Файл не вибрано';
+  document.getElementById('editUserModal').style.display = 'block';
+}
+
+// Закрити модальне вікно
+function closeEditModal() {
+  document.getElementById('editUserModal').style.display = 'none';
+}
+
+// Оновлення імені файлу при виборі
+function updateEditFileName() {
+  const input = document.getElementById('editPhoto');
+  const fileName = input.files[0] ? input.files[0].name : 'Файл не вибрано';
+  document.getElementById('editFileName').textContent = fileName;
+}
+
+// Збереження змін
+async function saveUserEdit() {
+  const name = document.getElementById('editName').value.trim();
+  const email = document.getElementById('editEmail').value.trim();
+  const password = document.getElementById('editPassword').value;
+  const photo = document.getElementById('editPhoto').files[0];
+
+  const formData = new FormData();
+  if (name) formData.append('name', name);
+  if (email) formData.append('email', email);
+  if (password) formData.append('password', password);
+  if (photo) formData.append('photo', photo);
+
+  const token = localStorage.getItem('token');
+
+  try {
+    const res = await fetch(`${API_URL}/users/${currentUserId}`, {
+      method: 'PUT',
+      body: formData,
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+
+    if (!res.ok) throw new Error('Помилка при редагуванні користувача');
+
+    showToast('Користувача оновлено!');
+    closeEditModal();
+    fetchUsers();
+  } catch (err) {
+    document.getElementById('editError').textContent = err.message;
+  }
+}
+
+
+    
+    // ======= ОНОВЛЕННЯ ІМЕНІ ФАЙЛУ =======
+    function updateFileName() {
+      const input = document.getElementById('regPhoto');
+      const fileName = input.files[0] ? input.files[0].name : 'Файл не вибрано';
+      document.getElementById('fileName').textContent = fileName;
+    }
+    
+    // ======= ПОКАЗ / ПРИХОВАННЯ ПАРОЛЮ =======
+    function togglePassword(inputId) {
+      const input = document.getElementById(inputId);
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+    
+    // ======= РЕЄСТРАЦІЯ КОРИСТУВАЧА =======
+    async function handleRegister() {
+      const name = regName.value.trim();
+      const email = regEmail.value.trim();
+      const password = regPassword.value;
+      const confirm = regConfirm.value;
+      const photo = regPhoto.files[0];
+    
+      if (!name || !email || !password || !confirm)
+        return showError('Всі поля обовʼязкові', 'registerError');
+    
+      if (password !== confirm)
+        return showError('Паролі не співпадають', 'registerError');
+    
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('email', email);
+      formData.append('password', password);
+      if (photo) formData.append('photo', photo);
+    
+      try {
+        await apiRequest('/register', 'POST', formData, true);
+        showToast('Користувача зареєстровано!');
+        closeRegisterModal();
+        fetchUsers();
+      } catch (e) {
+        showError(e.message, 'registerError');
+      }
+    }
+      window.addEventListener('DOMContentLoaded', () => {
+      fetchUsers();
+    });
+
+    function showToast(message, type = 'info', duration = 4000) {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+
+  let bgColor = '#21262d';
+  if (type === 'success') bgColor = '#238636';
+  else if (type === 'error') bgColor = '#f85149';
+  else if (type === 'warning') bgColor = '#e3b341';
+
+  toast.style.background = bgColor;
+  toast.style.color = '#c9d1d9';
+  toast.style.padding = '10px 15px';
+  toast.style.borderRadius = '6px';
+  toast.style.boxShadow = '0 2px 10px rgba(0,0,0,0.3)';
+  toast.style.fontSize = '14px';
+  toast.style.fontWeight = '500';
+  toast.style.opacity = '0';
+  toast.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+  toast.textContent = message;
+  toast.style.whiteSpace = 'nowrap'; 
+
+  container.appendChild(toast);
+
+  // Анімація появи
+  setTimeout(() => {
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateY(0)';
+  }, 10);
+
+  // Авто-зникнення
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(-20px)';
+    setTimeout(() => container.removeChild(toast), 300);
+  }, duration);
+}
+
+
+let userToDeleteId = null; // Змінна для поточного користувача, якого хочемо видалити
+
+function deleteUser(id) {
+  userToDeleteId = id;
+  const confirmModal = document.getElementById('confirmModal');
+  const confirmMessage = document.getElementById('confirmMessage');
+
+  confirmMessage.textContent = 'Видалити користувача?';
+  confirmModal.classList.remove('hidden');
+
+  // Кнопки Так / Ні
+  const yesBtn = document.getElementById('confirmYes');
+  const noBtn = document.getElementById('confirmNo');
+
+  // Очистимо старі слухачі, щоб не дублювалися
+  yesBtn.onclick = async () => {
+    confirmModal.classList.add('hidden');
+    await confirmDeleteUser();
+  };
+
+  noBtn.onclick = () => {
+    confirmModal.classList.add('hidden');
+    userToDeleteId = null;
+  };
+}
+
+// Функція для видалення після підтвердження
+async function confirmDeleteUser() {
+  if (!userToDeleteId) return;
+
+  try {
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${API_URL}/users/${userToDeleteId}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+
+    if (!res.ok) throw new Error('Помилка при видаленні користувача');
+
+    showToast('Користувача видалено!', 'success');
+    fetchUsers();
+  } catch (err) {
+    showToast(err.message, 'error');
+  } finally {
+    userToDeleteId = null;
+  }
+}
+
+const mobileNav = document.getElementById('mobileNav');
+
+// шукаємо активне посилання серед обох типів меню
+const activeLink =
+  document.querySelector('.nav-links a.active') ||
+  document.querySelector('.nav-links-admin a.active');
+
+if (activeLink) {
+  mobileNav.value = activeLink.getAttribute('href');
+}
+
+// при зміні select переходити за посиланням
+mobileNav.addEventListener('change', (e) => {
+  window.location.href = e.target.value;
+});
+
+</script>
+    
+</body>
+</html>

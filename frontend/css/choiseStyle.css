@@ -1,0 +1,231 @@
+body {
+    background-color: #0d1117;
+    color: #c9d1d9;
+    font-family: 'Aksent', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .auth {
+    background: #161b22;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 400px;
+    width: 100%;
+  }
+  input, button {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    background: #0d1117;
+    color: #c9d1d9;
+    font-size: 14px;
+    font-family: 'Aksent', sans-serif;
+
+  }
+  button {
+    background: linear-gradient(90deg, #1f6feb, #58a6ff);
+    color: #000000;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 0 8px rgba(88, 166, 255, 0.3);
+  }
+  
+  button:hover {
+    background: linear-gradient(90deg, #388bfd, #79c0ff);
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(88, 166, 255, 0.5);
+  }
+  
+  button:active {
+    transform: scale(0.98);
+  background: #1f6feb;
+  box-shadow: 0 0 6px rgba(31, 111, 235, 0.4);
+  }
+  
+  .error {
+    color: #f85149;
+    margin-bottom: 10px;
+  }
+  .link {
+    color: #58a6ff;
+    cursor: pointer;
+    text-decoration: underline;
+    text-align: center;
+  }
+  /* Модальне вікно */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.7);
+  }
+  .modal-content {
+    background-color: #161b22;
+    margin: 10% auto;
+    padding: 50px;
+    border-radius: 10px;
+    max-width: 400px;
+  }
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  .password-wrapper {
+    position: relative;
+  }
+
+  .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 45%;
+    transform: translateY(-55%);
+    cursor: pointer;
+    color: #58a6ff;
+    font-size: 16px;
+    user-select: none;
+  }
+
+  #loginBtn {
+    width: 104%;
+  }
+
+
+@media (max-width: 1024px) {
+  body {
+    padding: 30px;
+    height: auto;
+  }
+
+  .auth {
+    max-width: 500px;
+    width: 90%;
+    padding: 25px;
+  }
+
+  input, button {
+    font-size: 15px;
+    padding: 10px;
+  }
+
+  button {
+    border-radius: 8px;
+  }
+
+  .modal-content {
+    max-width: 500px;
+    padding: 40px;
+  }
+
+  .toggle-password {
+    font-size: 18px;
+    right: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 20px;
+    height: auto;
+    align-items: flex-start;
+    align-items: center;
+
+  }
+
+  .auth {
+    width: 100%;
+    max-width: 90%;
+    padding: 20px;
+    margin-top: 60px;
+  }
+
+  input, button {
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  .modal-content {
+    width: 90%;
+    margin: 30% auto;
+    padding: 30px;
+  }
+
+  .toggle-password {
+    font-size: 18px;
+    right: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+    align-items: center;
+
+  }
+#languageSelection h2{
+  font-size: 14px;
+}
+  .auth {
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 40px;
+  }
+
+  input, button {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  button {
+    border-radius: 6px;
+  }
+
+  .modal-content {
+    padding: 20px;
+    margin-top: 40%;
+    max-width: 90%;
+  }
+
+  .toggle-password {
+    font-size: 14px;
+    right: 6px;
+  }
+
+  #loginBtn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  .auth {
+    padding: 10px;
+  }
+
+  input, button {
+    font-size: 13px;
+    padding: 6px;
+  }
+
+  .modal-content {
+    padding: 15px;
+  }
+
+  .toggle-password {
+    font-size: 12px;
+  }
+}

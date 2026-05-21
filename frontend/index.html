@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-курс з нуля</title>
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/navStyles.css">
+  <link rel="stylesheet" href="css/fonStyles.css">
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <span class="logo-text">AI-курс з нуля</span>
+    </div>
+
+      
+    <nav class="nav-links">
+      <a href="index.html" class="active">Головна</a>
+      <a href="lessons.html">Уроки</a>
+      <a href="homework.html" id="homeworkLink">Домашні завдання</a>
+      <a href="#" id="profileLink">Профіль</a>
+    </nav>
+
+    <select id="mobileNav" class="mobile-nav">
+      <option value="index.html">Головна</option>
+      <option value="lessons.html">Уроки</option>
+      <option value="homework.html">Домашні завдання</option>
+      <option value="#" id="profileLink">Профіль</option>
+    </select>
+    
+
+    <div class="user-info">
+      <div class="user-email" id="userEmail" style="color: #c9d1d9; font-weight: 500; margin-left: 20px;"></div>
+      <select id="languageSelect">
+        <option value="uk">🇺🇦</option>
+        <option value="en">🇬🇧</option>
+      </select>
+    </div>
+
+   <div class="notification" id="notificationIcon" title="Сповіщення">
+    <img src="../icon/alarm-bell.png" alt="Сповіщення" class="notification-img">
+    <span class="badge hidden" id="notificationCount">0</span>
+  </div>
+  
+  <div id="notificationList" style="display:none; max-width: 400px; position: absolute; top: 50px; right: 20px; background: #161b22; color: #c9d1d9; border: 1px solid #58a6ff; border-radius: 8px; padding: 10px;"></div>
+            
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>
+        <img src="../icon/rocket.png" alt="AI-курс" class="logo-img">
+        AI-курс з нуля
+      </h1>
+            <p>Створи контент майбутнього: зображення, відео, музику, аватари — все це з нейромережами!</p>
+            <a href="lessons.html" class="cta-btn">Почати навчання</a>
+    </div>
+    <div class="hero-image">
+      <img src="../icon/AI.png" alt="AI illustration">
+    </div>
+  </section>
+  
+
+  <div class="what">
+    <h2 id="whatTitle">Що тебе чекає?</h2>
+  </div>
+  
+
+    <section id="course" class="lessons-grid">
+      <div class="lesson-card">
+        <div class="lesson-content">
+          <h3>1. MidJourney</h3>
+          <p>Світ з уяви: створи свої перші AI-зображення</p>
+        </div>
+        <video class="lesson-video" muted loop>
+          <source src="" type="video/mp4" />
+        </video>
+      </div>
+
+    <div class="lesson-card">
+      <div class="lesson-content">
+        <h3>2. PixVerse</h3>
+        <p>Оживи свою картинку: перше відео з персонажем</p>
+      </div>
+      <video class="lesson-video" muted loop>
+        <source src="" type="video/mp4" />
+      </video>
+    </div>
+
+
+    <div class="lesson-card">
+      <div class="lesson-content">
+        <h3>3. Suno</h3>
+        <p>Створи музику: AI-саундтрек до свого відео</p>
+      </div>
+      <video class="lesson-video" muted loop>
+        <source src="" type="video/mp4" />
+      </video>
+    </div>
+
+    <div class="lesson-card">
+      <div class="lesson-content">
+        <h3>4. CapCut</h3>
+        <p>Швидкий монтаж для Reels: ефекти, титри, динаміка</p>
+      </div>
+      <video class="lesson-video" muted loop>
+        <source src="" type="video/mp4" />
+      </video>
+    </div>
+
+    <div class="lesson-card">
+      <div class="lesson-content">
+        <h3>5. Кращі нейронки для мультфільмів</h3>
+        <p>Створюємо свій мультик</p>
+      </div>
+      <video class="lesson-video" muted loop>
+        <source src="" type="video/mp4" />
+      </video>
+    </div>
+
+    <div class="lesson-card">
+      <div class="lesson-content">
+        <h3>6. ChatGPT</h3>
+        <p>AI-сценарист: як писати, думати і створювати з GPT</p>
+      </div>
+      <video class="lesson-video" muted loop>
+        <source src="" type="video/mp4" />
+      </video>
+    </div>
+
+    <div class="lesson-card">
+      <div class="lesson-content">
+        <h3>7. Crea</h3>
+        <p>Портрети майбутнього: згенеруй себе або героя</p>
+      </div>
+      <video class="lesson-video" muted loop>
+        <source src="" type="video/mp4" />
+      </video>
+    </div>
+
+    <div class="lesson-card">
+      <div class="lesson-content">
+        <h3>8. Kling</h3>
+        <p>Очі ожили: анімація персонажа у Kling</p>
+      </div>
+      <video class="lesson-video" muted loop>
+        <source src="" type="video/mp4" />
+      </video>
+    </div>
+
+    <div class="lesson-card">
+      <div class="lesson-content">
+        <h3>9. Runway</h3>
+        <p>Кіно без камери: генерація відео та сцен</p>
+      </div>
+      <video class="lesson-video" muted loop>
+        <source src="" type="video/mp4" />
+      </video>
+    </div>
+
+    <div class="lesson-card">
+      <div class="lesson-content">
+        <h3>10. ElevenLabs</h3>
+        <p>Дай голос своєму герою: AI-озвучка, яка вражає</p>
+      </div>
+      <video class="lesson-video" muted loop>
+        <source src="" type="video/mp4" />
+      </video>
+    </div>
+
+    <div class="lesson-card">
+      <div class="lesson-content">
+        <h3>11. HeyGen</h3>
+        <p>Говорячий аватар: твоє обличчя — твій меседж</p>
+      </div>
+      <video class="lesson-video" muted loop>
+        <source src="" type="video/mp4" />
+      </video>
+    </div>
+
+    <div class="lesson-card">
+      <div class="lesson-content">
+        <h3>12. Трендові ролики</h3>
+        <p>Створюємо відомих людей, акторів, президентів</p>
+      </div>
+      <video class="lesson-video" muted loop>
+        <source src="" type="video/mp4" />
+      </video>
+    </div>
+
+    <div class="lesson-card">
+      <div class="lesson-content">
+        <h3>13. Твій перший Reels</h3>
+        <p>Навчись створювати та монтувати</p>
+      </div>
+      <video class="lesson-video" muted loop>
+        <source src="" type="video/mp4" />
+      </video>
+    </div>
+
+    <div class="lesson-card">
+      <div class="lesson-content">
+        <h3>14. Проблеми новачків та професіоналів</h3>
+        <p>Секрети нейронок</p>
+      </div>
+      <video class="lesson-video" muted loop>
+        <source src="" type="video/mp4" />
+      </video>
+    </div>
+
+    <div class="lesson-card">
+      <div class="lesson-content">
+        <h3>15. Надивленість</h3>
+        <p>Де брати ідеї? Що генерувати сьогодні?</p>
+      </div>
+      <video class="lesson-video" muted loop>
+        <source src="" type="video/mp4" />
+      </video>
+    </div>
+
+    <div class="lesson-card">
+      <div class="lesson-content">
+        <h3>16. Бонус</h3>
+        <p>Готові промти для трендових відео</p>
+      </div>
+      <video class="lesson-video" muted loop>
+        <source src="" type="video/mp4" />
+      </video>
+    </div>
+  </section>
+
+  <div id="tooltip" style="
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #58a6ff;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.5s;
+  z-index: 1000;
+">
+  Наведи — і поглянь, як виглядає твоя наступна пригода з AI!
+</div>
+
+<script src="../js/index.js"></script>      
+
+<script>
+
+  function showTooltip(lang) {
+    const tooltip = document.getElementById('tooltip');
+    tooltip.textContent = lang === 'en'
+      ? 'Hover — and see your next AI adventure!'
+      : 'Наведи — і поглянь, як виглядає твоя наступна пригода з AI!';
+    
+    tooltip.style.opacity = 1;
+  
+    setTimeout(() => {
+      tooltip.style.opacity = 0;
+    }, 5000);
+  }
+  
+  // показати підказку через 2 секунди після завантаження
+  setTimeout(() => {
+    const currentLang = localStorage.getItem('language') || 'uk';
+    showTooltip(currentLang);
+  }, 2000);
+  
+  document.querySelectorAll('#course .lesson-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      document.getElementById('tooltip').style.opacity = 0;
+    });
+  });
+  </script>
+  
+<script>
+
+
+  document.querySelectorAll('#course .lesson-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      const tooltip = document.getElementById('tooltip');
+      tooltip.style.opacity = 0;
+    });
+  });
+</script>
+
+<script>
+const lessons = {
+  uk: [
+    { title: "1. MidJourney", desc: "Світ з уяви: створи свої перші AI-зображення", video: "videos/midJourney.mp4" },
+    { title: "2. PixVerse", desc: "Оживи свою картинку: перше відео з персонажем", video: "videos/pixVerse.mp4" },
+    { title: "3. Suno", desc: "Створи музику: AI-саундтрек до свого відео", video: "videos/suno.mp4" },
+    { title: "4. CapCut", desc: "Швидкий монтаж для Reels: ефекти, титри, динаміка", video: "videos/capCut.mp4" },
+    { title: "5. Кращі нейронки для мультфільмів", desc: "Створюємо свій мультик", video: "videos/cartoons.mp4" },
+    { title: "6. ChatGPT", desc: "AI-сценарист: як писати, думати і створювати з GPT", video: "videos/chatGPT.mp4" },
+    { title: "7. Crea", desc: "Портрети майбутнього: згенеруй себе або героя", video: "videos/crea.mp4" },
+    { title: "8. Kling", desc: "Очі ожили: анімація персонажа у Kling", video: "videos/kling.mp4" },
+    { title: "9. Runway", desc: "Кіно без камери: генерація відео та сцен", video: "videos/runway.mp4" },
+    { title: "10. ElevenLabs", desc: "Дай голос своєму герою: AI-озвучка, яка вражає", video: "videos/elevenLabs.mp4" },
+    { title: "11. HeyGen", desc: "Говорячий аватар: твоє обличчя — твій меседж", video: "videos/heyGen.mp4" },
+    { title: "12. Трендові ролики", desc: "Створюємо відомих людей, акторів, президентів", video: "videos/trending.mp4" },
+    { title: "13. Твій перший Reels", desc: "Навчись створювати та монтувати", video: "videos/reels.mp4" },
+    { title: "14. Проблеми новачків та професіоналів", desc: "Секрети нейронок", video: "videos/secrets.mp4" },
+    { title: "15. Надивленість", desc: "Де брати ідеї? Що генерувати сьогодні?", video: "videos/inspiration.mp4" },
+    { title: "16. Бонус", desc: "Готові промти для трендових відео", video: "videos/bonus.mp4" }
+  ],
+  en: [
+    { title: "1. MidJourney", desc: "World from imagination: create your first AI images", video: "videos/midJourney.mp4" },
+    { title: "2. PixVerse", desc: "Bring your picture to life: first animated character", video: "videos/pixVerse.mp4" },
+    { title: "3. Suno", desc: "Create music: AI soundtrack for your video", video: "videos/suno.mp4" },
+    { title: "4. CapCut", desc: "Quick Reels editing: effects, titles, dynamics", video: "videos/capCut.mp4" },
+    { title: "5. Best AI for cartoons", desc: "Make your own animation", video: "videos/cartoons.mp4" },
+    { title: "6. ChatGPT", desc: "AI screenwriter: write, think, and create with GPT", video: "videos/chatGPT.mp4" },
+    { title: "7. Crea", desc: "Portraits of the future: generate yourself or a hero", video: "videos/crea.mp4" },
+    { title: "8. Kling", desc: "Eyes come alive: animate your character in Kling", video: "videos/kling.mp4" },
+    { title: "9. Runway", desc: "Cinema without camera: generate videos and scenes", video: "videos/runway.mp4" },
+    { title: "10. ElevenLabs", desc: "Give your hero a voice: impressive AI dubbing", video: "videos/elevenLabs.mp4" },
+    { title: "11. HeyGen", desc: "Talking avatar: your face – your message", video: "videos/heyGen.mp4" },
+    { title: "12. Trending videos", desc: "Create celebrities, actors, presidents", video: "videos/trending.mp4" },
+    { title: "13. Your first Reels", desc: "Learn to create and edit", video: "videos/reels.mp4" },
+    { title: "14. Beginners vs. pros", desc: "AI secrets", video: "videos/secrets.mp4" },
+    { title: "15. Inspiration", desc: "Where to get ideas? What to generate today?", video: "videos/inspiration.mp4" },
+    { title: "16. Bonus", desc: "Ready-to-use prompts for trending videos", video: "videos/bonus.mp4" }
+  ]
+};
+
+function renderLessons(lang) {
+  const container = document.getElementById('course');
+  container.innerHTML = lessons[lang].map(l => `
+    <div class="lesson-card">
+      <div class="lesson-content">
+        <h3>${l.title}</h3>
+        <p>${l.desc}</p>
+      </div>
+      <video class="lesson-video" muted loop>
+        <source src="${l.video}" type="video/mp4" />
+      </video>
+    </div>
+  `).join('');
+}
+
+// Ініціалізація збереженої мови
+const savedLang = localStorage.getItem('language') || 'uk';
+renderLessons(savedLang);
+
+// При зміні мови
+document.getElementById('languageSelect').addEventListener('change', e => {
+  localStorage.setItem('language', e.target.value);
+  renderLessons(e.target.value);
+});
+</script>
+
+  <script>
+    const API_URL = 'http://localhost:3000/api';
+  
+    document.getElementById('languageSelect').addEventListener('change', (e) => {
+      const selectedLang = e.target.value;
+      localStorage.setItem('language', selectedLang);
+      loadContent(selectedLang);
+    });
+  
+    document.querySelectorAll('.lesson-card').forEach(card => {
+      const video = card.querySelector('video');
+      card.addEventListener('mouseenter', () => video.play());
+      card.addEventListener('mouseleave', () => {
+        video.pause();
+        video.currentTime = 0;
+      });
+    });
+  
+    async function initPage() {
+      const savedLang = localStorage.getItem('language');
+      const userToken = localStorage.getItem('token');
+  
+      let lang = savedLang || 'uk';
+  
+      if (userToken) {
+        try {
+          const res = await fetch(`${API_URL}/profile`, {
+            headers: { 'Authorization': 'Bearer ' + userToken }
+          });
+          const userData = await res.json();
+  
+          // якщо з профілю є мова — беремо її
+          if (userData.language) {
+            lang = userData.language;
+            localStorage.setItem('language', lang);
+          }
+        } catch (err) {
+          console.error('Не вдалося завантажити профіль', err);
+        }
+      }
+  
+      document.getElementById('languageSelect').value = lang;
+  
+      loadContent(lang);
+    }
+  
+    function loadContent(lang) {
+      document.querySelector('.logo').textContent = lang === 'en' ? 'AI Course from Zero' : 'AI-курс з нуля';
+      const activeLink = document.querySelector('.nav-links a.active');
+      if (activeLink) activeLink.textContent = lang === 'en' ? 'Home' : 'Головна';
+      document.querySelector('.nav-links a[href="lessons.html"]').textContent = lang === 'en' ? 'Lessons' : 'Уроки';
+      document.querySelector('#homeworkLink').textContent = lang === 'en' ? 'Homework' : 'Домашні завдання';
+      document.querySelector('#profileLink').textContent = lang === 'en' ? 'Profile' : 'Профіль';
+  
+      document.querySelector('h1').innerHTML =
+  lang === 'en'
+    ? '<img src="../icon/rocket.png" alt="AI Course" class="logo-img"> AI Course from Zero'
+    : '<img src="../icon/rocket.png" alt="AI-курс" class="logo-img"> AI-курс з нуля';
+      document.querySelector('.hero p').textContent = lang === 'en'
+        ? 'Create the content of the future: images, videos, music, avatars — all with AI!'
+        : 'Створи контент майбутнього: зображення, відео, музику, аватари — все це з нейромережами!';
+      document.querySelector('.cta-btn').textContent = lang === 'en' ? 'Start Learning' : 'Почати навчання';
+  
+      const whatTitle = document.getElementById('whatTitle');
+      if (whatTitle) whatTitle.textContent = lang === 'en' ? 'What awaits you?' : 'Що тебе чекає?';
+
+      document.querySelectorAll('[data-uk]').forEach(el => {
+        el.textContent = lang === 'en' ? el.dataset.en : el.dataset.uk;
+      });
+    }
+  
+    initPage();
+  </script>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const cards = document.querySelectorAll(".lesson-card");
+    
+      cards.forEach(card => {
+        const video = card.querySelector("video");
+    
+        // при наведенні миші відео починає грати
+        card.addEventListener("mouseenter", () => {
+          video.play();
+        });
+    
+        // при відведенні миші — якщо ще не переглянуто, ховаємо відео
+        card.addEventListener("mouseleave", () => {
+          if (!card.classList.contains("visible")) {
+            video.pause();
+            video.currentTime = 2;
+          }
+        });
+    
+        // коли відео почало грати — відразу робимо картку "видимою назавжди"
+        video.addEventListener("play", () => {
+          card.classList.add("visible");
+          video.style.opacity = "1";
+          video.style.filter = "brightness(0.5)";
+        });
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+  loadHomework();
+
+  // слухаємо зміну мови
+  const select = document.getElementById('languageSelect');
+  if (select) {
+    select.addEventListener('change', () => {
+      const lang = select.value;
+      localStorage.setItem('language', lang);
+      loadHomework();
+    });
+  }
+
+  // 🎯 оголошуємо mobileNav тільки після завантаження DOM
+  const mobileNav = document.getElementById('mobileNav');
+
+  // при зміні select переходити за посиланням
+  if (mobileNav) {
+    mobileNav.addEventListener('change', (e) => {
+      const value = e.target.value;
+      if (value === 'profile') {
+        openProfile(); // або заміни на потрібну логіку
+      } else {
+        window.location.href = value;
+      }
+    });
+  }
+
+  // встановити активний пункт при завантаженні
+  const activeLink = document.querySelector('.nav-links a.active');
+  if (activeLink) {
+    mobileNav.value = activeLink.getAttribute('href');
+  }
+});
+
+// встановити активний пункт при завантаженні
+const mobileNav = document.getElementById('mobileNav');
+const activeLink = document.querySelector('.nav-links a.active');
+if (activeLink) {
+  mobileNav.value = activeLink.getAttribute('href');
+}
+
+
+if (mobileNav) {
+  mobileNav.addEventListener('change', (e) => {
+    const value = e.target.value;
+    const role = localStorage.getItem('role'); // беремо роль користувача
+
+    if (value === '#') { // це твій пункт "Профіль"
+      if (role === 'admin') {
+        window.location.href = 'admin.html';
+      } else {
+        window.location.href = 'profile.html';
+      }
+    } else {
+      window.location.href = value;
+    }
+  });
+}
+
+// при зміні select переходити за посиланням
+mobileNav.addEventListener('change', (e) => {
+  window.location.href = e.target.value;
+});
+
+    </script>
+    
+  <script src="../js/notification.js"></script>
+
+    
+</body>
+</html>

@@ -1,0 +1,156 @@
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Course from Scratch — Making Technology Understandable.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Open Graph для соцмереж -->
+  <meta property="og:title" content="AI Course from Scratch" />
+  <meta property="og:description" content="Learn AI from zero — making technology understandable for everyone." />
+  <meta property="og:url" content="http://localhost:3000" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="http://localhost:3000/images/index.jpeg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <!-- Twitter Card (якщо хтось шерує у Twitter) -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AI Course from Scratch" />
+  <meta name="twitter:description" content="Learn AI from zero — making technology understandable for everyone." />
+  <meta name="twitter:image" content="http://localhost:3000/images/index.jpeg" />
+
+  <link rel="stylesheet" href="css/fonStyles.css">
+  <link rel="stylesheet" href="css/choiseStyle.css">
+</head>
+
+<body>
+  <div id="languageSelection" class="language-selection">
+    <h2>Оберіть мову / Choose language</h2>
+    <button onclick="setLanguage('uk')">🇺🇦 Українська</button>
+    <button onclick="setLanguage('en')">🇬🇧 English</button>
+  </div>
+  
+  <div class="auth" id="authForm" style="display:none;">
+    <h2 id="authTitle">Вхід</h2>
+    <div id="errorMsg" class="error"></div>
+    <input type="email" id="emailInput" placeholder="Email" required />
+    <input type="password" id="passwordInput" placeholder="Пароль" required />
+    <button id="loginBtn">Увійти</button>
+  </div>
+  
+
+
+  <script>
+const API_URL = 'http://localhost:3000/api';
+
+    function showError(msg, el = 'errorMsg') {
+      document.getElementById(el).textContent = msg;
+    }
+
+    function updateFileName() {
+  const input = document.getElementById('regPhoto');
+  const fileName = input.files[0] ? input.files[0].name : translations[localStorage.getItem('language')].regNoFile;
+  document.getElementById('fileName').textContent = fileName;
+}
+    const translations = {
+  uk: {
+    authTitle: "Вхід",
+    emailPlaceholder: "Email",
+    passwordPlaceholder: "Пароль",
+    loginBtn: "Увійти",
+    registerLink: "Немає акаунта? Зареєструватися",
+    registerTitle: "Реєстрація",
+    registerBtn: "Зареєструватися",
+    regName: "Ім'я",
+    regEmail:"Email",
+    regPhoto: "Оберіть файл",
+    regNoFile: "Файл не вибрано",
+    regPassword: "Пароль",
+    regConfirm: "Підтвердити пароль",
+  },
+  en: {
+    authTitle: "Login",
+    emailPlaceholder: "Email",
+    passwordPlaceholder: "Password",
+    loginBtn: "Login",
+    registerLink: "No account? Register",
+    registerTitle: "Registration",
+    registerBtn: "Register",
+    regName: "Name",
+    regEmail:"Email",
+    regPhoto: "Select a file",
+    regNoFile: "No file chosen",
+    regPassword: "Password",
+    regConfirm: "Return password",
+  }
+};
+
+function setLanguage(lang) {
+  localStorage.setItem('language', lang);
+  document.getElementById('languageSelection').style.display = 'none';
+  document.getElementById('authForm').style.display = 'block';
+  applyLanguage(lang);
+}
+
+function applyLanguage(lang) {
+  document.getElementById('authTitle').textContent = translations[lang].authTitle;
+  document.getElementById('emailInput').placeholder = translations[lang].emailPlaceholder;
+  document.getElementById('passwordInput').placeholder = translations[lang].passwordPlaceholder;
+  document.getElementById('loginBtn').textContent = translations[lang].loginBtn;
+  
+ 
+
+  // Кастомна кнопка файлу
+  document.getElementById('fileBtn').textContent = translations[lang].regPhoto;
+
+  // Реєстрація
+  const registerTitle = document.querySelector('#registerModal h2');
+  const registerSubmitBtn = document.querySelector('#registerModal button[onclick="handleRegister()"]');
+  if(registerTitle) registerTitle.textContent = translations[lang].registerTitle;
+  if(registerSubmitBtn) registerSubmitBtn.textContent = translations[lang].registerBtn;
+
+  updateFileName();
+}
+
+
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('languageSelection').style.display = 'block';
+  document.getElementById('authForm').style.display = 'none';
+});
+
+
+    async function apiRequest(path, method = 'GET', body = null, isForm = false) {
+      const headers = isForm ? {} : { 'Content-Type': 'application/json' };
+      const res = await fetch(API_URL + path, {
+        method,
+        headers,
+        body: isForm ? body : JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Помилка запиту');
+      return data;
+    }
+
+    // Вхід
+    document.getElementById('loginBtn').onclick = async () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+      if (!email || !password) return showError('Введіть email і пароль');
+
+      try {
+        const data = await apiRequest('/login', 'POST', { email, password });
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+
+          const payload = JSON.parse(atob(data.token.split('.')[1]));
+          localStorage.setItem('role', payload.isAdmin ? 'admin' : 'user');
+          window.location.href = 'index.html';
+        }
+      } catch (e) {
+        showError(e.message);
+      }
+    };
+
+  </script>
+
+</body>
+</html>

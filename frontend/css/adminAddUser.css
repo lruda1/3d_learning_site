@@ -1,0 +1,553 @@
+body {
+    background-color: #0d1117;
+    color: #c9d1d9;
+    margin: 0; padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateX(0px);
+    animation: slideIn 2s forwards cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  
+  @keyframes slideIn {
+    to {
+      opacity: 1;
+    }
+  }
+  
+  
+  #usersList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .user {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    transition: background 0.3s ease;
+  }
+  
+  .user:hover {
+    background: rgba(88, 166, 255, 0.15);
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .user img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #58a6ff;
+  }
+  
+  .user-actions {
+    display: flex;
+    gap: 8px;
+  }
+  
+  /* Загальні кнопки у блоці користувача */
+.user-actions button {
+  background: transparent;
+  border: 1px solid #58a6ff;
+  color: #58a6ff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Спеціальні кольори для редагування і видалення */
+.user-actions .edit-btn {
+  border-color: #3fb950 !important;
+  color: #3fb950 !important;
+}
+
+.user-actions .edit-btn:hover {
+  background: #3fb950 !important;
+  color: #0d1117 !important;
+}
+
+.user-actions .delete-btn {
+  border-color: #f85149 !important;
+  color: #f85149 !important;
+}
+
+.user-actions .delete-btn:hover {
+  background: #f85149 !important;
+  color: #0d1117 !important;
+}
+  .auth {
+    background: #161b22;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 400px;
+    width: 100%;
+  }
+  input, button {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    background: #0d1117;
+    color: #c9d1d9;
+    font-size: 14px;
+  }
+  button {
+    background: linear-gradient(90deg, #1f6feb, #58a6ff);
+    color: #000000;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 0 8px rgba(88, 166, 255, 0.3);
+  }
+  
+  button:hover {
+    background: linear-gradient(90deg, #388bfd, #79c0ff);
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(88, 166, 255, 0.5);
+  }
+  
+  button:active {
+    transform: scale(0.98);
+  background: #1f6feb;
+  box-shadow: 0 0 6px rgba(31, 111, 235, 0.4);
+  }
+  .error {
+    color: #f85149;
+    margin-bottom: 10px;
+  }
+
+  /* Модальне вікно */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.7);
+  }
+  .modal-content {
+    background-color: #161b22;
+    margin: 10% auto;
+    padding: 50px;
+    border-radius: 10px;
+    max-width: 400px;
+  }
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  .password-wrapper {
+    position: relative;
+  }
+
+  .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 45%;
+    transform: translateY(-55%);
+    cursor: pointer;
+    color: #58a6ff;
+    font-size: 16px;
+    user-select: none;
+  }
+
+  body {
+    display: flex;
+    gap: 20px;
+  }
+  
+  #authForm {
+    flex: 1;
+  }
+  
+#usersListContainer {
+  margin: 40px auto;
+  max-width: 600px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px 25px;
+  border-radius: 16px;
+  box-shadow: 0 0 15px rgba(88, 166, 255, 0.2);
+  backdrop-filter: blur(6px);
+  color: #e6edf3;
+
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+}
+
+#usersList {
+  flex: 1; 
+  overflow-y: auto; 
+}
+
+.custom-file{
+  width: 50%;
+  padding-bottom: 20px;
+}
+
+#fileBtn{
+  background-color: #161b22;
+  border: 1px solid #000000;
+  transition: all 0.3s ease;
+}
+
+#fileBtn:hover{
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #000000;
+  transition: all 0.3s ease;
+}
+
+
+#registerLink {
+  background: linear-gradient(90deg, #1f6feb, #58a6ff);
+  color: #ffffff;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 0 8px rgba(88, 166, 255, 0.3);
+}
+
+#registerLink:hover {
+  background: linear-gradient(90deg, #388bfd, #79c0ff);
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(88, 166, 255, 0.5);
+}
+
+#registerLink:active {
+  transform: scale(0.98);
+background: #1f6feb;
+box-shadow: 0 0 6px rgba(31, 111, 235, 0.4);
+}
+
+
+
+.custom-modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(13, 17, 23, 0.85);
+  z-index: 9999;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.custom-modal-content {
+  background: #161b22;
+  border: 1px solid #58a6ff;
+  border-radius: 10px;
+  padding: 20px 30px;
+  max-width: 400px;
+  text-align: center;
+  color: #c9d1d9;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.modal-buttons {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.modal-buttons button {
+  background: #21262d;
+  color: #c9d1d9;
+  border: 1px solid #58a6ff;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.modal-buttons button:hover {
+  background: #58a6ff;
+  color: #fff;
+}
+
+#promptInput {
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #58a6ff;
+  background: #0d1117;
+  color: #c9d1d9;
+}
+
+#usersListContainer h3{
+  color: #58a6ff;
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+/* Планшети (до 1024px) */
+@media (max-width: 1024px) {
+  body {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  #authForm, #usersListContainer {
+    width: 90%;
+    margin: 20px auto;
+  }
+
+  #usersListContainer {
+    height: 60vh;
+    padding: 15px 20px;
+  }
+
+  #usersList {
+    max-height: 100%;
+  }
+
+  .custom-file {
+    width: 70%;
+  }
+
+  button, #registerLink, .modal-buttons button {
+    padding: 8px 14px;
+    font-size: 14px;
+  }
+
+  input, #promptInput {
+    font-size: 14px;
+    padding: 6px 8px;
+  }
+
+  .modal-content, .custom-modal-content {
+    padding: 30px 20px;
+    max-width: 350px;
+  }
+  .user span {
+    font-size: 1rem; /* ім'я користувача */
+  }
+  .user-email {
+    font-size: 0.9rem; /* email */
+  }
+}
+
+/* Мобільні телефони (до 768px) */
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  #authForm, #usersListContainer {
+    width: 95%;
+    margin: 15px auto;
+  }
+
+  #usersListContainer {
+    height: 50vh;
+    padding: 12px 15px;
+  }
+
+  .custom-file {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  #fileBtn {
+    width: 100%;
+  }
+
+  button, #registerLink, .modal-buttons button {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  input, #promptInput {
+    font-size: 13px;
+    padding: 6px 8px;
+  }
+
+  .modal-content, .custom-modal-content {
+    padding: 25px 15px;
+    max-width: 90%;
+  }
+
+  .user {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .user-info {
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .user-actions {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  #usersListContainer h3 {
+    font-size: 1rem;
+  }
+  .user span {
+    font-size: 1.05rem; /* ім'я трохи більший для зручності */
+  }
+  .user-email {
+    font-size: 1rem;
+  }
+  .user-actions {
+    flex-wrap: nowrap; /* щоб кнопки завжди були в рядку */
+  }
+
+}
+
+/* Дуже маленькі телефони (до 480px) */
+@media (max-width: 480px) {
+  body {
+    font-size: 13px;
+  }
+
+  #authForm, #usersListContainer {
+    width: 100%;
+  }
+
+  #usersListContainer {
+    height: 45vh;
+  }
+
+  h3 {
+    font-size: 0.95rem;
+  }
+
+  .user img {
+    width: 35px;
+    height: 35px;
+  }
+
+  button, #registerLink, .modal-buttons button {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  input, #promptInput {
+    font-size: 12px;
+    padding: 5px 8px;
+  }
+
+  .modal-content, .custom-modal-content {
+    padding: 20px 12px;
+  }
+  .user span {
+    font-size: 1rem;
+  }
+  .user-email {
+    font-size: 0.95rem;
+  }
+  .user-actions {
+    flex-wrap: nowrap; /* щоб кнопки завжди були в рядку */
+  }
+}
+
+#usersListContainer {
+  margin: 40px auto;
+  width: 600px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px 25px;
+  border-radius: 16px;
+  box-shadow: 0 0 15px rgba(88, 166, 255, 0.2);
+  backdrop-filter: blur(6px);
+  color: #e6edf3;
+
+  display: flex;
+  flex-direction: column;
+  height: 80vh; /* фіксована висота */
+}
+
+#usersList {
+  flex: 1; 
+  overflow-y: auto; /* вертикальний скролл */
+  padding-right: 5px; /* щоб не заходило на border */
+}
+
+/* додатково для гарного скролу на різних браузерах */
+#usersList::-webkit-scrollbar {
+  width: 8px;
+}
+
+#usersList::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+#usersList::-webkit-scrollbar-thumb {
+  background-color: #58a6ff;
+  border-radius: 4px;
+}
+
+
+/* Планшети до 1024px */
+@media (max-width: 1024px) {
+  #usersListContainer {
+    width: 90%;
+    height: 60vh;
+    padding: 15px 20px;
+  }
+}
+
+/* Смартфони до 768px */
+@media (max-width: 768px) {
+  #usersListContainer {
+    width: 95%;
+    height: 80vh;
+    padding: 12px 15px;
+  }
+
+  #usersList {
+    padding-right: 2px;
+  }
+}
+
+/* Дуже маленькі телефони до 480px */
+@media (max-width: 480px) {
+  #usersListContainer {
+    width: 100%;
+    height: 20vh;
+    padding: 10px 12px;
+  }
+
+  #usersList {
+    padding-right: 2px;
+  }
+}

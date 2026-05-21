@@ -1,0 +1,369 @@
+  .badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    padding: 2px 6px;
+  }
+  @keyframes slideIn {
+    to {
+      opacity: 1;
+    }
+  }
+  h1 {
+    text-align: center;
+    margin-top: 20px;
+  }
+  h2 {
+    margin-top: 3px;
+    text-align: center;
+  }
+  .lesson-left form {
+    max-width: 500px;
+    margin: 20px auto;
+    background: #161b22;
+    padding: 20px;
+    border-radius: 10px;
+
+  }
+  input, textarea, button {
+    width: 100%;
+    margin-top: 5px;
+
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    font-size: 14px;
+    background: #0d1117;
+    color: #c9d1d9;
+  }
+
+  .lesson-right ul {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 0;
+    list-style: none;
+  }
+  .lesson-right li {
+    background: #21262d;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    line-height: 1.8;
+  }
+  .lesson-right li button {
+    background: linear-gradient(90deg, #f85149, #da3633);
+    color: #ffffff;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.25s ease;
+    box-shadow: 0 0 8px rgba(248, 81, 73, 0.3);
+  }
+  
+  .lesson-right li button:hover {
+    background: linear-gradient(90deg, #ff6a5d, #f85149);
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(248, 81, 73, 0.5);
+  }
+  
+  .lesson-right li button:active {
+    transform: scale(0.98);
+    background: #da3633;
+    box-shadow: 0 0 6px rgba(218, 54, 51, 0.4);
+  }
+  
+  
+  body {
+    background-color: #0d1117;
+    color: #c9d1d9;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateX(0px);
+    animation: slideIn 2s forwards cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  
+  .lesson-container {
+    display: flex;
+    height: 85vh;
+  }
+  .lesson-left,
+  .lesson-right {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+  }
+
+.lesson-left select[name="language"] {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #58a6ff;
+  background-color: #161b22;
+  color: #c9d1d9;
+  font-size: 14px;
+  margin-bottom: 15px;
+  margin-top: 5px;
+  cursor: pointer;
+  transition: border 0.3s, background 0.3s;
+  width: 103%;
+}
+
+.lesson-left select[name="language"]:hover {
+  background-color: #21262d;
+  border-color: #1f6feb;
+}
+
+/* Стиль для input type="file" */
+.lesson-left input[type="file"] {
+  width: 99%;
+  border-radius: 6px;
+  border: 1px solid #58a6ff;
+  background-color: #161b22;
+  color: #c9d1d9;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border 0.3s, background 0.3s;
+}
+
+.lesson-left input[type="file"]::file-selector-button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #58a6ff;
+  background-color: #21262d;
+  color: #c9d1d9;
+  cursor: pointer;
+  transition: background 0.3s, border 0.3s;
+}
+
+.lesson-left input[type="file"]::file-selector-button:hover {
+  background-color: #1f6feb;
+  color: #fff;
+  border-color: #1f6feb;
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 420px;
+  margin-bottom: 20px;
+}
+
+.filter-container label {
+  font-weight: bold;
+  color: #c9d1d9;
+}
+
+.filter-container select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #58a6ff;
+  background: #161b22;
+  color: #c9d1d9;
+  text-align: center;
+  text-align-last: center;
+  cursor: pointer;  
+  transition: border 0.3s, background 0.3s;
+}
+
+.filter-container select:hover {
+  background-color: #21262d;
+  border-color: #1f6feb;
+}
+
+button[type="submit"] {
+  background: linear-gradient(90deg, #1f6feb, #58a6ff);
+  color: #ffffff;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 15px;
+  width: 102%;
+  transition: all 0.25s ease;
+  box-shadow: 0 0 8px rgba(88, 166, 255, 0.3);
+}
+
+button[type="submit"]:hover {
+  background: linear-gradient(90deg, #388bfd, #79c0ff);
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(88, 166, 255, 0.5);
+}
+
+button[type="submit"]:active {
+  transform: scale(0.98);
+  background: #1f6feb;
+  box-shadow: 0 0 6px rgba(31, 111, 235, 0.4);
+}
+/* 🖥️ Від 1025px до 1920px — великі екрани */
+@media (min-width: 1025px) and (max-width: 1920px) {
+ 
+  .lesson-container {
+    flex-direction: row;
+    gap: 20px;
+  }
+
+  .lesson-left form {
+    max-width: 500px;
+  }
+
+  .lesson-right ul {
+    max-width: 600px;
+  }
+}
+
+/* 💻 Планшети (769px — 1024px) */
+@media (max-width: 1024px) {
+  header {
+    padding: 15px 20px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav-links-admin {
+    gap: 15px;
+    font-size: 0.8rem;
+  }
+
+  .user-info {
+    margin-left: 0;
+    gap: 10px;
+    font-size: 0.8rem;
+  }
+
+  .lesson-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .lesson-left,
+  .lesson-right {
+    padding: 10px;
+  }
+
+  .filter-container {
+    margin-left: 0;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+/* 📱 Мобільні телефони (до 768px) */
+@media (max-width: 768px) {
+  header {
+    padding: 10px 15px;
+    align-items: center;
+  }
+
+  /* Ховаємо звичайне меню */
+  .nav-links-admin {
+    display: none;
+  }
+
+  /* Логотип */
+  header .logo-text {
+    display: none; /* ховаємо текст */
+  }
+
+  header .logo-img {
+    display: inline-block; /* показуємо фото */
+    width: 40px;
+    height: 40px;
+  }
+
+  /* Контейнер уроків */
+  .lesson-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .lesson-left form {
+    width: 90%;
+    margin: 10px auto;
+    padding: 15px;
+  }
+
+  .lesson-right ul {
+    width: 90%;
+    margin: 10px auto;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+  }
+
+  .filter-container {
+    margin: 0;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* 📱 Дуже маленькі телефони (до 480px) */
+@media (max-width: 480px) {
+  header {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .nav-links-admin a {
+    font-size: 0.75rem;
+  }
+
+  .mobile-nav {
+    font-size: 0.8rem;
+    width: 80%;
+  }
+
+  .lesson-left form,
+  .lesson-right ul {
+    width: 95%;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font-size: 13px;
+  }
+}
+
+/* 📱 Надмалі екрани (до 360px) */
+@media (max-width: 360px) {
+  header {
+    gap: 5px;
+  }
+
+
+  .logo-img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .lesson-left form,
+  .lesson-right ul {
+    width: 100%;
+    padding: 10px;
+  }
+
+  button[type="submit"] {
+    font-size: 13px;
+    padding: 8px;
+  }
+}

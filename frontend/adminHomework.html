@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="css/fonStyles.css">    
+  <link rel="stylesheet" href="css/adminHomework.css">
+  <link rel="stylesheet" href="css/navStyles.css">
+  <link rel="stylesheet" href="css/navStylesAdmin.css">
+
+  <title>Домашнє завдання користувачів</title>
+</head>
+
+<body>
+  <header>
+    <div class="logo">AI-курс з нуля</div>
+  
+    <nav class="nav-links-admin">
+      <div class="nav-left">
+        <a href="index.html">Головна</a>
+        <a href="lessons.html">Уроки</a>
+        <a href="homework.html" id="homeworkLink">Домашні завдання</a>
+      </div>
+  
+      <div class="nav-right">
+        <a href="admin.html" class="admin-link" style="color: #58a6ff;">Додати урок</a>
+        <a href="adminHomework.html" class="admin-link active"style="color: #58a6ff;">Домашні роботи користувачів</a>
+        <a href="adminAddUser.html" class="admin-link"style="color: #58a6ff;">Додати користувача</a>
+      </div>
+    </nav>
+
+    <select id="mobileNav" class="mobile-nav">
+      <option value="index.html">Головна</option>
+      <option value="lessons.html">Уроки</option>
+      <option value="homework.html">Домашні завдання</option>
+      <option value="admin.html" style="color: #58a6ff;">Додати урок</option>
+      <option value="adminHomework.html" style="color: #58a6ff;">Домашні роботи користувачів</option>
+      <option value="adminAddUser.html" style="color: #58a6ff;">Додати користувача</option>
+    </select>
+
+  </header>
+  
+
+  <div class="filter-container">
+    <label for="langFilter">Фільтрувати за мовою:</label>
+    <select id="langFilter">
+      <option value="all">Всі</option>
+      <option value="uk">Українська</option>
+      <option value="en">Англійська</option>
+    </select>
+  </div>
+  
+
+  <div id="homework-list"></div>
+</div>
+
+<div id="toastContainer" style="
+position: fixed;
+top: 20px;
+left: 50%;
+transform: translateX(-50%);
+display: flex;
+flex-direction: column;
+gap: 10px;
+z-index: 9999;
+align-items: center;
+"></div>
+
+  <script>
+    async function loadHomework() {
+      const langFilter = document.getElementById('langFilter').value;
+      const res = await fetch('http://localhost:3000/api/admin/homework', {
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+      });
+  
+      let homeworks = await res.json();
+  
+      if (langFilter !== 'all') {
+        homeworks = homeworks.filter(hw => hw.language === langFilter);
+      }
+  
+      await renderHomeworkList(homeworks);
+    }
+  
+    async function renderHomeworkList(homeworks) {
+      const container = document.getElementById('homework-list');
+      container.innerHTML = '';
+  
+      if (homeworks.length === 0) {
+        container.innerHTML = '<p">Немає домашніх робіт для відображення</p>';
+        return;
+      }
+  
+      for (const hw of homeworks) {
+
+        // Отримуємо дані користувача
+        let user = null;
+        try {
+          const res = await fetch(`http://localhost:3000/api/users/${hw.userEmail}`, {
+            headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+          });
+          if (res.ok) user = await res.json();
+        } catch (err) {
+          console.error('Не вдалося завантажити користувача', hw.userEmail, err);
+        }
+  
+        const avatar = user?.avatarUrl || 'https://www.gravatar.com/avatar/?d=identicon&s=50';
+        const name = user?.name || hw.userEmail;
+  
+        const div = document.createElement('div');
+        div.className = 'homework-item';
+        div.innerHTML = `
+          <img src="${avatar}" alt="Фото ${name}" class="user-avatar" width="50" height="50"
+               style="border-radius:50%;margin-right:10px;">
+          <p><strong>Урок №:</strong> ${hw.lessonNumber} (${hw.language?.toUpperCase() || '—'})</p>
+          <p><strong>Назва уроку:</strong> ${hw.lessonTitle || '—'}</p>
+          <p><strong>Мова:</strong> ${hw.language}</p>
+
+          <p><strong>Користувач:</strong> ${name}</p>
+          <p><strong>Файл:</strong> <a href="/uploads/homeworks/${hw.storedFilename}" target="_blank">${hw.filename}</a></p>
+          <p><strong>Коментар користувача:</strong> ${hw.comment || '-'}</p>
+          <p><strong>Коментар адміна:</strong> ${hw.adminComment || '-'}</p>
+          <textarea placeholder="Ваш коментар..." data-id="${hw._id}">${hw.adminComment || ''}</textarea>
+          <button onclick="saveAdminComment('${hw._id}')">  <img src="../icon/safe-delivery.png" alt="safe" style="width:15px; height:15px;"> Зберегти коментар</button>
+          <hr>
+        `;
+        container.appendChild(div);
+      }
+    }
+  
+    function saveAdminComment(id) {
+      const textarea = document.querySelector(`textarea[data-id="${id}"]`);
+      const comment = textarea.value;
+  
+      fetch(`http://localhost:3000/api/admin/homework/${id}/comment`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        body: JSON.stringify({ adminComment: comment })
+      })
+        .then(res => res.json())
+        .then(() => {
+          showToast('💾 Коментар збережено');
+          loadHomework();
+        })
+        .catch(err => {
+          console.error('Помилка при збереженні:', err);
+          showToast('❌ Помилка при збереженні');
+        });
+    }
+  
+    document.getElementById('langFilter').addEventListener('change', loadHomework);
+    document.addEventListener('DOMContentLoaded', loadHomework);
+
+function showToast(message, type = 'info', duration = 4000) {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+
+  let bgColor = '#21262d';
+  if (type === 'success') bgColor = '#238636';
+  else if (type === 'error') bgColor = '#f85149';
+  else if (type === 'warning') bgColor = '#e3b341';
+
+  toast.style.background = bgColor;
+  toast.style.color = '#c9d1d9';
+  toast.style.padding = '10px 15px';
+  toast.style.borderRadius = '6px';
+  toast.style.boxShadow = '0 2px 10px rgba(0,0,0,0.3)';
+  toast.style.fontSize = '14px';
+  toast.style.fontWeight = '500';
+  toast.style.opacity = '0';
+  toast.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+  toast.textContent = message;
+  toast.style.whiteSpace = 'nowrap'; 
+
+  container.appendChild(toast);
+
+  // Анімація появи
+  setTimeout(() => {
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateY(0)';
+  }, 10);
+
+  // Авто-зникнення
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(-20px)';
+    setTimeout(() => container.removeChild(toast), 300);
+  }, duration);
+}
+
+const mobileNav = document.getElementById('mobileNav');
+
+// шукаємо активне посилання серед обох типів меню
+const activeLink =
+  document.querySelector('.nav-links a.active') ||
+  document.querySelector('.nav-links-admin a.active');
+
+if (activeLink) {
+  mobileNav.value = activeLink.getAttribute('href');
+}
+
+// при зміні select переходити за посиланням
+mobileNav.addEventListener('change', (e) => {
+  window.location.href = e.target.value;
+});
+  </script>
+
+</body>
+</html>

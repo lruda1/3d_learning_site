@@ -1,0 +1,413 @@
+body {
+    background-color: #0d1117;
+    color: #c9d1d9;
+    margin: 0; padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateX(0px);
+    animation: slideIn 2s forwards cubic-bezier(0.25, 1, 0.5, 1);
+
+  }
+ 
+  main {
+    padding: 20px;
+    flex-grow: 1;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+ 
+  @keyframes slideIn {
+    to {
+      opacity: 1;
+    }
+  }
+ 
+  .locked {
+    text-align: center;
+    font-size: 20px;
+    color: #8b949e;
+    margin-top: 100px;
+  }
+  .lesson-list {
+    margin-bottom: 20px;
+  }
+  .lesson-item {
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    margin-bottom: 4px;
+    background: #21262d;
+    transition: background 0.3s ease;
+  }
+  .lesson-item:hover {
+    background: #30363d;
+  }
+  .lesson-item.active {
+    background: #58a6ff;
+    color: black;
+  }
+  video {
+    width: 100%;
+    max-height: 400px;
+    background: black;
+    border-radius: 8px;
+  }
+  .progress-container {
+    margin-top: 10px;
+    background: #30363d;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 12px;
+  }
+  .progress-bar {
+    height: 100%;
+    background: #58a6ff;
+    width: 0;
+    transition: width 0.3s ease;
+  }
+  .chat {
+    margin-top: 20px;
+    background: #161b22;
+    padding: 10px;
+    border-radius: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  .chat-message {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #30363d;
+    padding-bottom: 5px;
+  }
+  form.comment-form {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+  }
+  form.comment-form textarea {
+    flex-grow: 1;
+    resize: none;
+    height: 60px;
+    border-radius: 5px;
+    border: none;
+    padding: 8px;
+    font-size: 14px;
+    background-color: #0d1117;
+    color: #c9d1d9;
+  }
+  form.comment-form button {
+    background: #238636;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .homework-comment {
+    background: #21262d;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 10px;
+    font-style: italic;
+    color: #58a6ff;
+  }
+  .lessons-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+gap: 20px;
+padding: 40px;
+}
+.lesson-card {
+position: relative;
+background: #1e1e2f;
+color: white;
+padding: 20px;
+border-radius: 12px;
+box-shadow: 0 0 10px rgba(0,0,0,0.3);
+transition: transform 0.4s ease;
+overflow: hidden;
+}
+
+.lesson-card:hover {
+transform: translateY(-5px);
+}
+
+.lesson-content {
+position: relative;
+z-index: 2;
+transition: opacity 0.5s ease;
+}
+
+.lesson-card:hover .lesson-content {
+opacity: 1;
+}
+
+.lesson-video {
+position: absolute;
+top: 0; left: 0;
+width: 100%;
+height: 100%;
+object-fit: cover;
+opacity: 0;
+transition: opacity 0.5s ease;
+border-radius: 12px;
+z-index: 1;
+}
+
+.lesson-card:hover .lesson-video {
+opacity: 1;
+}
+
+button {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #fff;
+}
+
+button.edit-btn {
+  background-color: #238636;
+}
+button.edit-btn:hover {
+  background-color: #2ea043;
+  transform: translateY(-2px);
+}
+
+button.delete-btn {
+  background-color: #da3633;
+}
+button.delete-btn:hover {
+  background-color: #f85149;
+  transform: translateY(-2px);
+}
+#homework-list{
+margin-left: 10px;
+margin-right: 10px;
+
+}
+
+
+.custom-modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(13, 17, 23, 0.85);
+  z-index: 9999;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.custom-modal-content {
+  background: #161b22;
+  border: 1px solid #58a6ff;
+  border-radius: 10px;
+  padding: 20px 30px;
+  max-width: 400px;
+  text-align: center;
+  color: #c9d1d9;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.modal-buttons {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.modal-buttons button {
+  background: #21262d;
+  color: #c9d1d9;
+  border: 1px solid #58a6ff;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.modal-buttons button:hover {
+  background: #58a6ff;
+  color: #fff;
+}
+
+#promptInput {
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #58a6ff;
+  background: #0d1117;
+  color: #c9d1d9;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+
+@media (max-width: 768px) {
+  main {
+    padding: 10px;
+    max-width: 100%;
+  }
+
+  video {
+    max-height: 200px;
+  }
+
+  .lessons-grid {
+    grid-template-columns: 1fr;
+    padding: 10px;
+    gap: 15px;
+  }
+
+  .lesson-card {
+    padding: 15px;
+  }
+
+  .lesson-video {
+    border-radius: 8px;
+  }
+
+  .chat {
+    max-height: 200px;
+    padding: 8px;
+  }
+
+  form.comment-form textarea {
+    height: 50px;
+    font-size: 13px;
+  }
+
+  button, .modal-buttons button {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .custom-modal-content {
+    max-width: 90%;
+    padding: 15px 20px;
+  }
+
+  #homework-list {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  
+}
+
+
+.homework-info p {
+  font-size: 16px;
+  color: #c9d1d9;
+  margin: 15px 0;
+}
+
+.homework-info .comment {
+  color: #8b949e;
+}
+
+.homework-info .teacher-response {
+  color: green;
+  font-weight: bold;
+}
+
+.homework-info .pending {
+  color: red;
+  font-style: italic;
+}
+
+.homework-info a {
+  color: #58a6ff;
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .homework-info {
+    padding: 10px;
+  }
+  .homework-info p {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .homework-info {
+    padding: 12px;
+  }
+  .homework-info p {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .homework-info {
+    padding: 18px;
+  }
+  .homework-info p {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  main {
+    padding: 15px;
+    max-width: 95%;
+  }
+
+  video {
+    max-height: 300px;
+  }
+
+  .lessons-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .lesson-card {
+    padding: 18px;
+  }
+
+  .lesson-video {
+    border-radius: 10px;
+  }
+
+  .chat {
+    max-height: 250px;
+    padding: 10px;
+  }
+
+  form.comment-form textarea {
+    height: 55px;
+    font-size: 14px;
+  }
+
+  button, .modal-buttons button {
+    padding: 7px 14px;
+    font-size: 14px;
+  }
+
+  .custom-modal-content {
+    max-width: 350px;
+    padding: 18px 25px;
+  }
+
+  #homework-list {
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+
+}
