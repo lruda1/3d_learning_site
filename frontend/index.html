@@ -460,8 +460,9 @@ const API_URL =
     });
 
     document.addEventListener('DOMContentLoaded', () => {
-  loadHomework();
-
+      async function loadHomework() {
+  console.log("loadHomework викликана, але ще не реалізована");
+}
   // слухаємо зміну мови
   const select = document.getElementById('languageSelect');
   if (select) {

@@ -55,9 +55,6 @@ app.get('/api/test', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
-});
   const SECRET_KEY = process.env.SECRET_KEY;
   
   const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
@@ -794,14 +791,12 @@ app.get('*', (req, res, next) => {
 });
 
 // Запуск сервера
-mongoose.connect(process.env.MONGO_URI)
+  mongoose.connect(process.env.MONGO_URI)
   .then(() => {
-    console.log('✅ MongoDB connected');
+    console.log('MongoDB connected');
 
-    app.listen(PORT, () => {
-      console.log(`✅ Server running on port ${PORT}`);
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server running on ${PORT}`);
     });
   })
-  .catch(err => {
-    console.error('❌ MongoDB error:', err);
-  });
+  .catch(console.error);
