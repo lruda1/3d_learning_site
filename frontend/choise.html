@@ -22,21 +22,96 @@
   <link rel="stylesheet" href="css/choiseStyle.css">
 </head>
 
-<body>
-  <div id="languageSelection" class="language-selection">
-    <h2>Оберіть мову / Choose language</h2>
-    <button onclick="setLanguage('uk')">🇺🇦 Українська</button>
-    <button onclick="setLanguage('en')">🇬🇧 English</button>
-  </div>
-  
-  <div class="auth" id="authForm" style="display:none;">
-    <h2 id="authTitle">Вхід</h2>
-    <div id="errorMsg" class="error"></div>
-    <input type="email" id="emailInput" placeholder="Email" required />
-    <input type="password" id="passwordInput" placeholder="Пароль" required />
-    <button id="loginBtn">Увійти</button>
-  </div>
-  
+  <body>
+
+    <!-- ВИБІР МОВИ (ПЕРШИЙ ЕКРАН) -->
+    <div id="languageSelection" class="language-selection">
+      <h2>Оберіть мову / Choose language</h2>
+      <button onclick="setLanguage('uk')">🇺🇦 Українська</button>
+      <button onclick="setLanguage('en')">🇬🇧 English</button>
+    </div>
+    
+    <!-- ВСЯ СТОРІНКА -->
+    <div id="appContent" style="display:none;">
+    
+      <div class="container">
+    
+        <div class="hero">
+          <h1>3DLearningSite</h1>
+          <p class="subtitle">
+            Адаптивна навчальна платформа з основ штучного інтелекту
+          </p>
+      
+          <div class="cta">
+            <p>
+              🚀 Хочеш увійти в світ AI та навчитися працювати з сучасними технологіями?
+            </p>
+            <p>
+              Цей курс створений для студентів і початківців, які хочуть отримати практичні навички з нуля.
+            </p>
+      
+            <button class="cta-button" onclick="showLogin()">
+              Почати навчання
+            </button>
+          </div>
+        </div>
+      
+        <!-- FEATURES -->
+        <div class="welcome-section">
+      
+          <div class="features">
+            <h2>Що ти отримаєш</h2>
+            <ul>
+              <li>📚 Покрокове навчання від бази до практики</li>
+              <li>🤖 Робота з сучасними AI-інструментами</li>
+              <li>📝 Практичні завдання після кожного уроку</li>
+              <li>📈 Відстеження прогресу</li>
+              <li>🔐 Захищена авторизація користувачів</li>
+              <li>🌍 Двомовний інтерфейс</li>
+            </ul>
+          </div>
+      
+          <div class="benefits">
+            <h2>Для кого цей курс</h2>
+            <p>
+              Для студентів, початківців та всіх, хто хоче увійти в сферу штучного інтелекту
+              без попереднього досвіду програмування.
+            </p>
+          </div>
+      
+        </div>
+      
+        <!-- LOGIN -->
+        <div class="auth" id="authForm" style="display:none;">
+          <h2 id="authTitle">Вхід</h2>
+          <div id="errorMsg" class="error"></div>
+      
+          <input type="email" id="emailInput" placeholder="Email" />
+          <input type="password" id="passwordInput" placeholder="Пароль" />
+      
+          <button id="loginBtn">Увійти</button>
+        </div>
+      
+        <!-- CONTACTS -->
+        <div class="contacts">
+          <h2>Потрібна допомога або доступ до курсу?</h2>
+      
+          <p>
+            📩 Email: <b>info@3dlearningsite.com</b>
+          </p>
+      
+          <p>
+            💬 Telegram: <b>@3dlearningsite</b>
+          </p>
+      
+          <p class="note">
+            Напиши нам — і ми допоможемо тобі почати навчання та отримати доступ до матеріалів.
+          </p>
+        </div>
+      
+      </div>
+    </div>
+    
 
 
   <script>
@@ -87,10 +162,24 @@ const API_URL =
 
 function setLanguage(lang) {
   localStorage.setItem('language', lang);
+
   document.getElementById('languageSelection').style.display = 'none';
-  document.getElementById('authForm').style.display = 'block';
+  document.getElementById('appContent').style.display = 'block';
+
   applyLanguage(lang);
 }
+
+function showLogin() {
+  document.getElementById('authForm').style.display = 'block';
+
+  document.getElementById('authForm')
+    .scrollIntoView({ behavior: 'smooth' });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('languageSelection').style.display = 'flex';
+  document.getElementById('appContent').style.display = 'none';
+});
 
 function applyLanguage(lang) {
   document.getElementById('authTitle').textContent = translations[lang].authTitle;
@@ -133,8 +222,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Вхід
     document.getElementById('loginBtn').onclick = async () => {
-      const email = emailInput.value.trim();
-      const password = passwordInput.value.trim();
+      const email = document.getElementById('emailInput').value.trim();
+      const password = document.getElementById('passwordInput').value.trim();
       if (!email || !password) return showError('Введіть email і пароль');
 
       try {
