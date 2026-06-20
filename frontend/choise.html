@@ -127,36 +127,67 @@ const API_URL =
   const fileName = input.files[0] ? input.files[0].name : translations[localStorage.getItem('language')].regNoFile;
   document.getElementById('fileName').textContent = fileName;
 }
-    const translations = {
+const translations = {
   uk: {
     authTitle: "Вхід",
     emailPlaceholder: "Email",
     passwordPlaceholder: "Пароль",
     loginBtn: "Увійти",
-    registerLink: "Немає акаунта? Зареєструватися",
-    registerTitle: "Реєстрація",
-    registerBtn: "Зареєструватися",
-    regName: "Ім'я",
-    regEmail:"Email",
-    regPhoto: "Оберіть файл",
-    regNoFile: "Файл не вибрано",
-    regPassword: "Пароль",
-    regConfirm: "Підтвердити пароль",
+    startBtn: "Почати навчання",
+
+    heroTitle: "3DLearningSite",
+    heroSubtitle: "Адаптивна навчальна платформа з основ штучного інтелекту",
+
+    heroText1: "Хочеш увійти в світ AI та навчитися працювати з сучасними технологіями?",
+    heroText2: "Цей курс створений для студентів і початківців, які хочуть отримати практичні навички з нуля.",
+
+    startBtn: "Почати навчання",
+
+feature1: "📚 Покрокове навчання від бази до практики",
+feature2: "🤖 Робота з сучасними AI-інструментами",
+feature3: "📝 Практичні завдання після кожного уроку",
+feature4: "📈 Відстеження прогресу",
+feature5: "🔐 Захищена авторизація користувачів",
+feature6: "🌍 Двомовний інтерфейс",
+
+benefitsText: "Для студентів, початківців та всіх, хто хоче увійти в сферу штучного інтелекту без попереднього досвіду програмування.",
+
+
+    featuresTitle: "Що ти отримаєш",
+    benefitsTitle: "Для кого цей курс",
+
+    contactTitle: "Потрібна допомога або доступ до курсу?",
+    contactNote: "Напиши нам — і ми допоможемо тобі почати навчання та отримати доступ до матеріалів."
   },
+
   en: {
     authTitle: "Login",
     emailPlaceholder: "Email",
     passwordPlaceholder: "Password",
     loginBtn: "Login",
-    registerLink: "No account? Register",
-    registerTitle: "Registration",
-    registerBtn: "Register",
-    regName: "Name",
-    regEmail:"Email",
-    regPhoto: "Select a file",
-    regNoFile: "No file chosen",
-    regPassword: "Password",
-    regConfirm: "Return password",
+    startBtn: "Start learning",
+
+    heroTitle: "3DLearningSite",
+    heroSubtitle: "Adaptive AI learning platform",
+
+    heroText1: "Want to enter the world of AI and learn modern technologies?",
+    heroText2: "This course is designed for beginners who want practical skills from scratch.",
+
+    startBtn: "Start Learning",
+
+  feature1: "📚 Step-by-step learning from basics to practice",
+  feature2: "🤖 Working with modern AI tools",
+  feature3: "📝 Practical tasks after each lesson",
+  feature4: "📈 Progress tracking",
+  feature5: "🔐 Secure user authentication",
+  feature6: "🌍 Bilingual interface",
+
+  benefitsText: "For students, beginners, and anyone who wants to enter the field of artificial intelligence without prior programming experience.",
+    featuresTitle: "What you will get",
+    benefitsTitle: "Who this course is for",
+
+    contactTitle: "Need help or access to the course?",
+    contactNote: "Contact us — we will help you start learning and get access to materials."
   }
 };
 
@@ -182,23 +213,61 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function applyLanguage(lang) {
-  document.getElementById('authTitle').textContent = translations[lang].authTitle;
-  document.getElementById('emailInput').placeholder = translations[lang].emailPlaceholder;
-  document.getElementById('passwordInput').placeholder = translations[lang].passwordPlaceholder;
-  document.getElementById('loginBtn').textContent = translations[lang].loginBtn;
+
   
- 
+const t = translations[lang];
+// кнопка
+const startBtn = document.querySelector('.cta-button');
+if (startBtn) startBtn.textContent = t.startBtn;
 
-  // Кастомна кнопка файлу
-  document.getElementById('fileBtn').textContent = translations[lang].regPhoto;
+// список переваг
+const features = document.querySelectorAll('.features li');
 
-  // Реєстрація
-  const registerTitle = document.querySelector('#registerModal h2');
-  const registerSubmitBtn = document.querySelector('#registerModal button[onclick="handleRegister()"]');
-  if(registerTitle) registerTitle.textContent = translations[lang].registerTitle;
-  if(registerSubmitBtn) registerSubmitBtn.textContent = translations[lang].registerBtn;
+if (features[0]) features[0].textContent = t.feature1;
+if (features[1]) features[1].textContent = t.feature2;
+if (features[2]) features[2].textContent = t.feature3;
+if (features[3]) features[3].textContent = t.feature4;
+if (features[4]) features[4].textContent = t.feature5;
+if (features[5]) features[5].textContent = t.feature6;
 
-  updateFileName();
+// опис курсу
+const benefitsText = document.querySelector('.benefits p');
+if (benefitsText) benefitsText.textContent = t.benefitsText;
+// login
+const authTitle = document.getElementById('authTitle');
+const email = document.getElementById('emailInput');
+const password = document.getElementById('passwordInput');
+const loginBtn = document.getElementById('loginBtn');
+
+if (authTitle) authTitle.textContent = t.authTitle;
+if (email) email.placeholder = t.emailPlaceholder;
+if (password) password.placeholder = t.passwordPlaceholder;
+if (loginBtn) loginBtn.textContent = t.loginBtn;
+
+// hero
+const heroTitle = document.querySelector('.hero h1');
+const subtitle = document.querySelector('.subtitle');
+const heroText = document.querySelectorAll('.cta p');
+
+if (heroTitle) heroTitle.textContent = t.heroTitle;
+if (subtitle) subtitle.textContent = t.heroSubtitle;
+
+if (heroText[0]) heroText[0].textContent = t.heroText1;
+if (heroText[1]) heroText[1].textContent = t.heroText2;
+
+// sections
+const featuresTitle = document.querySelector('.features h2');
+const benefitsTitle = document.querySelector('.benefits h2');
+
+if (featuresTitle) featuresTitle.textContent = t.featuresTitle;
+if (benefitsTitle) benefitsTitle.textContent = t.benefitsTitle;
+
+// contacts
+const contactTitle = document.querySelector('.contacts h2');
+const contactNote = document.querySelector('.contacts .note');
+
+if (contactTitle) contactTitle.textContent = t.contactTitle;
+if (contactNote) contactNote.textContent = t.contactNote;
 }
 
 
