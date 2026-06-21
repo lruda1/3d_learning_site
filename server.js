@@ -48,98 +48,73 @@ app.use(cors({
 
 app.use(express.json());
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASS
-  }
-});
+
 
 app.post("/api/certificate", authMiddleware, async (req, res) => {
   try {
-    console.log("CERT START");
-
     const user = await User.findOne({ email: req.user.email });
     if (!user) {
-      console.log("NO USER");
       return res.status(404).json({ message: "Користувача не знайдено" });
     }
 
     const lang = user.language || "uk";
     const lessons = await Lesson.find({ language: lang });
 
-    console.log("LESSONS:", lessons.length);
+    if (!lessons.length) {
+      return res.status(400).json({ message: "Немає уроків" });
+    }
 
     const progress = user.progress instanceof Map
-    ? user.progress
-    : new Map(Object.entries(user.progress || {}));
+      ? user.progress
+      : new Map(Object.entries(user.progress || {}));
 
     let total = 0;
 
     lessons.forEach(l => {
       const key = String(l.lessonNumber);
-      total += (progress instanceof Map ? progress.get(key) : progress[key]) || 0;
+      const value = progress.get
+        ? (progress.get(key) || 0)
+        : (progress[key] || 0);
+
+      total += value;
     });
 
-    const avg = lessons.length ? Math.round(total / lessons.length) : 0;
-
-    console.log("AVG:", avg);
+    const avg = Math.round(total / lessons.length);
 
     if (avg < 100) {
       return res.status(400).json({ message: "Курс ще не завершено" });
     }
 
-    const filePath = path.join(__dirname, `certificate-${user._id}.pdf`);
+    // 📄 створюємо PDF в памʼяті
+    const doc = new PDFDocument();
 
-    console.log("CREATING PDF:", filePath);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=certificate.pdf`
+    );
 
-    await new Promise((resolve, reject) => {
-      const doc = new PDFDocument();
-      const stream = fs.createWriteStream(filePath);
+    doc.pipe(res);
 
-      doc.pipe(stream);
-
-      doc.fontSize(26).text("CERTIFICATE OF COMPLETION", { align: "center" });
-      doc.moveDown();
-      doc.fontSize(20).text(user.name, { align: "center" });
-      doc.moveDown();
-      doc.fontSize(14).text("Completed AI Course", { align: "center" });
-
-      doc.end();
-
-      stream.on("finish", () => {
-        console.log("PDF READY");
-        resolve();
-      });
-
-      stream.on("error", (err) => {
-        console.log("PDF ERROR:", err);
-        reject(err);
-      });
+    doc.fontSize(26).text("CERTIFICATE OF COMPLETION", {
+      align: "center"
     });
 
-    console.log("SENDING EMAIL");
-
-    await transporter.sendMail({
-      from: process.env.EMAIL,
-      to: user.email,
-      subject: "Сертифікат",
-      attachments: [{ filename: "certificate.pdf", path: filePath }]
+    doc.moveDown();
+    doc.fontSize(20).text(user.name, {
+      align: "center"
     });
 
-    console.log("EMAIL SENT");
+    doc.moveDown();
+    doc.fontSize(14).text("Completed AI Course", {
+      align: "center"
+    });
 
-    fs.unlinkSync(filePath);
-
-    res.json({ message: "Сертифікат відправлено 🎉" });
+    doc.end();
 
   } catch (err) {
-    console.error("CERTIFICATE ERROR:", err);
-    res.status(500).json({
-      message: "Помилка створення сертифіката",
-      error: err.message
-    });
+    console.error("CERT ERROR:", err);
+    res.status(500).json({ message: "Помилка створення сертифіката" });
   }
 });
 
