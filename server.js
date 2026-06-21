@@ -86,30 +86,82 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
     }
 
     // 📄 створюємо PDF в памʼяті
-    const doc = new PDFDocument();
+    const doc = new PDFDocument({ size: "A4", margin: 50 });
 
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename=certificate.pdf`
-    );
-
+    res.setHeader("Content-Disposition", "attachment; filename=certificate.pdf");
+    
     doc.pipe(res);
-
-    doc.fontSize(26).text("CERTIFICATE OF COMPLETION", {
-      align: "center"
-    });
-
-    doc.moveDown();
-    doc.fontSize(20).text(user.name, {
-      align: "center"
-    });
-
-    doc.moveDown();
-    doc.fontSize(14).text("Completed AI Course", {
-      align: "center"
-    });
-
+    
+    const date = new Date().toLocaleDateString("uk-UA");
+    
+    // 🌟 ФОН-СТИЛЬ (легкий декоративний ефект)
+    doc.rect(0, 0, doc.page.width, doc.page.height)
+      .fill("#f5f7fb");
+    
+    // 🟦 РАМКА
+    doc.rect(25, 25, doc.page.width - 50, doc.page.height - 50)
+      .lineWidth(3)
+      .strokeColor("#1f6feb")
+      .stroke();
+    
+    // 🏆 HEADER
+    doc
+      .fontSize(34)
+      .fillColor("#111")
+      .text("CERTIFICATE", { align: "center", baseline: "middle" });
+    
+    doc
+      .fontSize(20)
+      .fillColor("#555")
+      .text("OF COMPLETION", { align: "center" });
+    
+    // ✨ СПЕЙС
+    doc.moveDown(2);
+    
+    // 👤 ІМ’Я
+    doc
+      .fontSize(28)
+      .fillColor("#1f6feb")
+      .text(user.name, {
+        align: "center",
+        underline: true
+      });
+    
+    // 📄 ОПИС
+    doc.moveDown(2);
+    
+    doc
+      .fontSize(14)
+      .fillColor("#333")
+      .text(
+        "This is to certify that the student has successfully completed the AI Course from scratch and demonstrated understanding of the material.",
+        {
+          align: "center",
+          width: 420,
+          lineGap: 6
+        }
+      );
+    
+    // 📅 ДАТА
+    doc.moveDown(3);
+    
+    doc
+      .fontSize(12)
+      .fillColor("#666")
+      .text(`Date: ${date}`, { align: "center" });
+    
+    // 🏅 ПЕЧАТКА (імітація)
+    doc.circle(doc.page.width / 2, 680, 45)
+      .strokeColor("#1f6feb")
+      .lineWidth(2)
+      .stroke();
+    
+    doc
+      .fontSize(10)
+      .fillColor("#1f6feb")
+      .text("AI COURSE", doc.page.width / 2 - 28, 670);
+    
     doc.end();
 
   } catch (err) {
