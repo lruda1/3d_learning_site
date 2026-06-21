@@ -59,10 +59,11 @@ const transporter = nodemailer.createTransport({
 app.post("/api/certificate", authMiddleware, async (req, res) => {
   try {
     const user = await User.findOne({ email: req.user.email });
-    if (!user) return res.status(404).json({ message: "Користувача не знайдено" });
+    if (!user) {
+      return res.status(404).json({ message: "Користувача не знайдено" });
+    }
 
     const lessons = await Lesson.find({ language: user.language });
-
     const progress = user.progress || new Map();
 
     let total = 0;
@@ -74,38 +75,53 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
 
     const avg = lessons.length ? Math.round(total / lessons.length) : 0;
 
-    console.log("AVG:", avg);
-
     if (avg < 100) {
       return res.status(400).json({ message: "Курс ще не завершено" });
     }
 
-    // PDF
-    const doc = new PDFDocument();
-    const filePath = `certificate-${user._id}.pdf`;
+    const fileName = `certificate-${user._id}.pdf`;
+    const filePath = path.join(__dirname, fileName);
 
-    doc.pipe(fs.createWriteStream(filePath));
+    // 🔥 1. Створюємо PDF і чекаємо поки він запишеться
+    await new Promise((resolve, reject) => {
+      const doc = new PDFDocument();
+      const stream = fs.createWriteStream(filePath);
 
-    doc.fontSize(26).text("CERTIFICATE OF COMPLETION", { align: "center" });
-    doc.moveDown();
-    doc.fontSize(20).text(user.name, { align: "center" });
-    doc.moveDown();
-    doc.fontSize(14).text("Completed AI Course");
+      doc.pipe(stream);
 
-    doc.end();
+      doc.fontSize(26).text("CERTIFICATE OF COMPLETION", { align: "center" });
+      doc.moveDown();
+      doc.fontSize(20).text(user.name, { align: "center" });
+      doc.moveDown();
+      doc.fontSize(14).text("Completed AI Course", { align: "center" });
 
+      doc.end();
+
+      stream.on("finish", resolve);
+      stream.on("error", reject);
+    });
+
+    // 🔥 2. Відправка email ПІСЛЯ створення файлу
     await transporter.sendMail({
       from: process.env.EMAIL,
       to: user.email,
       subject: "Сертифікат",
-      attachments: [{ filename: "certificate.pdf", path: filePath }]
+      attachments: [
+        {
+          filename: "certificate.pdf",
+          path: filePath
+        }
+      ]
     });
+
+    // 🔥 3. (опціонально) видалити файл після відправки
+    fs.unlinkSync(filePath);
 
     res.json({ message: "Сертифікат відправлено 🎉" });
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Помилка сервера" });
+    console.error("CERT ERROR:", err);
+    res.status(500).json({ message: "Помилка створення сертифіката" });
   }
 });
 
