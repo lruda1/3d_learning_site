@@ -55,6 +55,9 @@
       <div id="progressUk"></div>
 <div id="progressEn"></div>
 
+<button id="certificateBtn" style="display:none; margin-top:10px;">
+  Отримати сертифікат
+</button>
       <button class="logout" id="logoutBtn">Вийти</button>
     </div>
 
@@ -162,6 +165,18 @@ mobileNav.addEventListener('change', (e) => {
     const data = await res.json();
     console.log('Прогрес:', data);
 
+    const certBtn = document.getElementById("certificateBtn");
+
+let ukProgress = data.uk.overallProgress;
+let enProgress = data.en.overallProgress;
+
+// показуємо кнопку тільки якщо хоча б один курс = 100%
+if (ukProgress === 100 || enProgress === 100) {
+  certBtn.style.display = "block";
+} else {
+  certBtn.style.display = "none";
+}
+
     const lang = document.getElementById("languageSelect").value;
     const containerUk = document.getElementById('progressUk');
     const containerEn = document.getElementById('progressEn');
@@ -189,6 +204,22 @@ mobileNav.addEventListener('change', (e) => {
   }
 }
 
+document.getElementById("certificateBtn").addEventListener("click", async () => {
+  try {
+    const res = await fetch(API_URL + "/certificate", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+        "Content-Type": "application/json"
+      }
+    });
+
+    const data = await res.json();
+    alert(data.message);
+  } catch (err) {
+    alert("Помилка створення сертифіката");
+  }
+});
 
 async function downloadHomework(id, filename) {
   const token = localStorage.getItem('token');
