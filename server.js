@@ -41,7 +41,7 @@ require('dotenv').config();
 
 // CORS: тільки для фронтенду
 app.use(cors({
-  origin: 'https://threed-learning-site.onrender.com',
+  origin: '*',
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
