@@ -61,51 +61,47 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
     const user = await User.findOne({ email: req.user.email });
     if (!user) return res.status(404).json({ message: "Користувача не знайдено" });
 
-    const progress = user.progress || new Map();
-    let total = 0;
-    let count = 0;
+    const lessons = await Lesson.find({ language: user.language });
 
-    progress.forEach(v => {
-      total += v;
-      count++;
+    const progress = user.progress || new Map();
+
+    let total = 0;
+
+    lessons.forEach(l => {
+      const key = l.lessonNumber.toString();
+      total += progress.get(key) || 0;
     });
 
-    const avg = count ? Math.round(total / count) : 0;
+    const avg = lessons.length ? Math.round(total / lessons.length) : 0;
+
+    console.log("AVG:", avg);
 
     if (avg < 100) {
       return res.status(400).json({ message: "Курс ще не завершено" });
     }
 
-    // 📄 PDF сертифікат
+    // PDF
     const doc = new PDFDocument();
     const filePath = `certificate-${user._id}.pdf`;
 
-    doc.pipe(require("fs").createWriteStream(filePath));
+    doc.pipe(fs.createWriteStream(filePath));
 
     doc.fontSize(26).text("CERTIFICATE OF COMPLETION", { align: "center" });
     doc.moveDown();
-    doc.fontSize(18).text(`This certifies that`);
-    doc.fontSize(22).text(user.name, { align: "center" });
+    doc.fontSize(20).text(user.name, { align: "center" });
     doc.moveDown();
-    doc.fontSize(18).text("has successfully completed the AI Course from Scratch.");
+    doc.fontSize(14).text("Completed AI Course");
 
     doc.end();
 
-    // 📧 email
     await transporter.sendMail({
       from: process.env.EMAIL,
       to: user.email,
-      subject: "Ваш сертифікат AI курсу 🎓",
-      text: "Вітаємо! Ваш сертифікат у вкладенні.",
-      attachments: [
-        {
-          filename: "certificate.pdf",
-          path: filePath
-        }
-      ]
+      subject: "Сертифікат",
+      attachments: [{ filename: "certificate.pdf", path: filePath }]
     });
 
-    res.json({ message: "Сертифікат відправлено на email 🎉" });
+    res.json({ message: "Сертифікат відправлено 🎉" });
 
   } catch (err) {
     console.error(err);
