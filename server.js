@@ -71,13 +71,15 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
 
     console.log("LESSONS:", lessons.length);
 
-    const progress = user.progress || new Map();
+    const progress = user.progress instanceof Map
+    ? user.progress
+    : new Map(Object.entries(user.progress || {}));
 
     let total = 0;
 
     lessons.forEach(l => {
       const key = String(l.lessonNumber);
-      total += progress.get(key) || 0;
+      total += (progress instanceof Map ? progress.get(key) : progress[key]) || 0;
     });
 
     const avg = lessons.length ? Math.round(total / lessons.length) : 0;
@@ -595,7 +597,10 @@ app.get('/download/homework/:id', authMiddleware, async (req, res) => {
     if (!user) return res.status(404).json({ message: 'Користувача не знайдено' });
 
     // Прогрес користувача
-    const progress = user.progress || new Map();
+    const progress = user.progress instanceof Map
+    ? user.progress
+    : new Map(Object.entries(user.progress || {}));
+
 
     const calculateProgress = async (lang) => {
       const lessons = await Lesson.find({ language: lang }).sort({ lessonNumber: 1 });
