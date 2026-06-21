@@ -9,6 +9,9 @@ const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
 
+const nodemailer = require("nodemailer");
+const PDFDocument = require("pdfkit");
+
 const app = express();
 app.use(express.json());
 
@@ -45,8 +48,70 @@ app.use(cors({
 
 app.use(express.json());
 
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.EMAIL_PASS
+  }
+});
 
+app.post("/api/certificate", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.user.email });
+    if (!user) return res.status(404).json({ message: "Користувача не знайдено" });
 
+    const progress = user.progress || new Map();
+    let total = 0;
+    let count = 0;
+
+    progress.forEach(v => {
+      total += v;
+      count++;
+    });
+
+    const avg = count ? Math.round(total / count) : 0;
+
+    if (avg < 100) {
+      return res.status(400).json({ message: "Курс ще не завершено" });
+    }
+
+    // 📄 PDF сертифікат
+    const doc = new PDFDocument();
+    const filePath = `certificate-${user._id}.pdf`;
+
+    doc.pipe(require("fs").createWriteStream(filePath));
+
+    doc.fontSize(26).text("CERTIFICATE OF COMPLETION", { align: "center" });
+    doc.moveDown();
+    doc.fontSize(18).text(`This certifies that`);
+    doc.fontSize(22).text(user.name, { align: "center" });
+    doc.moveDown();
+    doc.fontSize(18).text("has successfully completed the AI Course from Scratch.");
+
+    doc.end();
+
+    // 📧 email
+    await transporter.sendMail({
+      from: process.env.EMAIL,
+      to: user.email,
+      subject: "Ваш сертифікат AI курсу 🎓",
+      text: "Вітаємо! Ваш сертифікат у вкладенні.",
+      attachments: [
+        {
+          filename: "certificate.pdf",
+          path: filePath
+        }
+      ]
+    });
+
+    res.json({ message: "Сертифікат відправлено на email 🎉" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Помилка сервера" });
+  }
+});
 
 // Тестовий роут для перевірки
 app.get('/api/test', (req, res) => {
