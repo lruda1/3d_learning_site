@@ -57,51 +57,56 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
       return res.status(404).json({ message: "Користувача не знайдено" });
     }
 
-    // Перевірка завершення курсу
+    // ==========================
+    // ПРОГРЕС (СПОЧАТКУ ОГОЛОШУЄМО!)
+    // ==========================
+    const progress = user.progress instanceof Map
+      ? user.progress
+      : new Map(Object.entries(user.progress || {}));
+
     const ukLessons = await Lesson.find({ language: "uk" });
     const enLessons = await Lesson.find({ language: "en" });
-    
-    let ukProgress = 0;
-    let enProgress = 0;
-    
+
+    let ukSum = 0;
+    let enSum = 0;
+
     ukLessons.forEach(l => {
-      ukProgress += progress.get(String(l.lessonNumber)) || 0;
+      ukSum += progress.get(String(l.lessonNumber)) || 0;
     });
-    
+
     enLessons.forEach(l => {
-      enProgress += progress.get(String(l.lessonNumber)) || 0;
+      enSum += progress.get(String(l.lessonNumber)) || 0;
     });
-    
-    ukProgress = ukLessons.length
-      ? Math.round(ukProgress / ukLessons.length)
+
+    const ukProgress = ukLessons.length
+      ? Math.round(ukSum / ukLessons.length)
       : 0;
-    
-    enProgress = enLessons.length
-      ? Math.round(enProgress / enLessons.length)
+
+    const enProgress = enLessons.length
+      ? Math.round(enSum / enLessons.length)
       : 0;
-    
+
+    // ==========================
+    // ВИБІР МОВИ СЕРТИФІКАТА
+    // ==========================
     let lang = "uk";
-    
-    if (enProgress === 100) {
+
+    if (enProgress === 100 && ukProgress !== 100) {
       lang = "en";
     } else if (ukProgress === 100) {
       lang = "uk";
     }
-        const lessons = await Lesson.find({ language: lang });
+
+    const lessons = await Lesson.find({ language: lang });
 
     if (!lessons.length) {
       return res.status(400).json({ message: "Немає уроків" });
     }
 
-    const progress = user.progress instanceof Map
-      ? user.progress
-      : new Map(Object.entries(user.progress || {}));
-
     let total = 0;
 
     lessons.forEach(l => {
-      const key = String(l.lessonNumber);
-      total += progress.get(key) || 0;
+      total += progress.get(String(l.lessonNumber)) || 0;
     });
 
     const avg = Math.round(total / lessons.length);
@@ -113,7 +118,7 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
     }
 
     // ==========================
-    // МОВА СЕРТИФІКАТА
+    // МОВА ТЕКСТУ
     // ==========================
     const isUk = lang === "uk";
 
@@ -134,10 +139,7 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
       ? "Адміністратор платформи"
       : "Platform Administrator";
 
-    const issuedText = isUk
-      ? "Видано"
-      : "Issued";
-
+    const issuedText = isUk ? "Видано" : "Issued";
     const idText = "ID";
 
     const date = new Date().toLocaleDateString(
@@ -160,158 +162,79 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
     });
 
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader(
-      "Content-Disposition",
-      "attachment; filename=certificate.pdf"
-    );
+    res.setHeader("Content-Disposition", "attachment; filename=certificate.pdf");
 
     doc.pipe(res);
 
     doc.registerFont(
       "DejaVuSans",
-      path.join(
-        __dirname,
-        "frontend/css/font/DejaVuSans.ttf"
-      )
+      path.join(__dirname, "frontend/css/font/DejaVuSans.ttf")
     );
 
     doc.font("DejaVuSans");
 
-    // Фон
-    doc.rect(0, 0, doc.page.width, doc.page.height)
-      .fill("#ffffff");
+    // фон
+    doc.rect(0, 0, doc.page.width, doc.page.height).fill("#ffffff");
 
-    // Рамка
+    // рамка
     doc.lineWidth(5)
       .strokeColor("#1f4f8f")
-      .rect(
-        25,
-        25,
-        doc.page.width - 50,
-        doc.page.height - 50
-      )
+      .rect(25, 25, doc.page.width - 50, doc.page.height - 50)
       .stroke();
 
-    // Логотип
-    if (
-      fs.existsSync(
-        path.join(__dirname, "frontend/images/logo.png")
-      )
-    ) {
-      doc.image(
-        path.join(
-          __dirname,
-          "frontend/images/logo.png"
-        ),
-        50,
-        50,
-        { width: 120 }
-      );
+    // логотип
+    const logoPath = path.join(__dirname, "frontend/images/logo.png");
+    if (fs.existsSync(logoPath)) {
+      doc.image(logoPath, 50, 50, { width: 120 });
     }
 
-    // Заголовок
-    doc.fontSize(50)
-      .fillColor("#1f4f8f")
-      .text(certTitle, 0, 160, {
-        align: "center"
-      });
+    // заголовок
+    doc.fontSize(50).fillColor("#1f4f8f")
+      .text(certTitle, 0, 160, { align: "center" });
 
-    doc.fontSize(18)
-      .fillColor("#555")
-      .text(certText, 0, 230, {
-        align: "center"
-      });
+    doc.fontSize(18).fillColor("#555")
+      .text(certText, 0, 230, { align: "center" });
 
-    // Ім'я
-    doc.fontSize(36)
-      .fillColor("#000")
-      .text(user.name, 0, 290, {
-        align: "center"
-      });
+    // ім'я
+    doc.fontSize(36).fillColor("#000")
+      .text(user.name, 0, 290, { align: "center" });
 
     doc.moveTo(250, 330)
       .lineTo(doc.page.width - 250, 330)
       .strokeColor("#1f4f8f")
       .stroke();
 
-    // Опис
-    doc.fontSize(20)
-      .fillColor("#555")
-      .text(completedText, 0, 360, {
-        align: "center"
-      });
+    doc.fontSize(20).fillColor("#555")
+      .text(completedText, 0, 360, { align: "center" });
 
-    doc.fontSize(26)
-      .fillColor("#1f4f8f")
-      .text(courseName, 0, 395, {
-        align: "center"
-      });
+    doc.fontSize(26).fillColor("#1f4f8f")
+      .text(courseName, 0, 395, { align: "center" });
 
-    // Підпис
-    const signPath = path.join(
-      __dirname,
-      "frontend/images/signature.png"
-    );
-
+    // підпис
+    const signPath = path.join(__dirname, "frontend/images/signature.png");
     const signX = doc.page.width - 220;
 
     if (fs.existsSync(signPath)) {
-      doc.image(signPath, signX, 410, {
-        width: 130
-      });
+      doc.image(signPath, signX, 410, { width: 130 });
     }
 
-    doc.fontSize(12)
-      .fillColor("#333")
-      .text(
-        adminText,
-        signX - 10,
-        480,
-        {
-          width: 150,
-          align: "center"
-        }
-      );
+    doc.fontSize(12).fillColor("#333")
+      .text(adminText, signX - 10, 480, { width: 150, align: "center" });
 
-    // Печатка
-    const stampPath = path.join(
-      __dirname,
-      "frontend/images/stamp.png"
-    );
+    // печатка
+    const stampPath = path.join(__dirname, "frontend/images/stamp.png");
 
     if (fs.existsSync(stampPath)) {
-      doc.image(stampPath, 45, 360, {
-        width: 210,
-        height: 170
-      });
+      doc.image(stampPath, 45, 360, { width: 210, height: 170 });
     }
 
-    // Дата та номер
+    // дата + id
     const metaX = doc.page.width - 200;
 
-    doc.fontSize(10)
-      .fillColor("#777")
-      .text(
-        `${idText}: ${certId}`,
-        metaX,
-        525,
-        {
-          width: 150,
-          align: "right"
-        }
-      );
+    doc.fontSize(10).fillColor("#777")
+      .text(`${idText}: ${certId}`, metaX, 525, { align: "right" });
 
-    doc.fontSize(10)
-      .fillColor("#777")
-      .text(
-        `${issuedText}: ${date}`,
-        metaX,
-        540,
-        {
-          width: 150,
-          align: "right"
-        }
-      );
+    doc.text(`${issuedText}: ${date}`, metaX, 540, { align: "right" });
 
     doc.end();
 
