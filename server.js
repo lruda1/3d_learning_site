@@ -67,43 +67,35 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
     const date = new Date().toLocaleDateString("uk-UA");
     const certId = "3DL-" + new Date().getFullYear() + "-" + Math.floor(Math.random() * 999999);
 
-    // 1. ФОН (чистий та світлий)
+    // 1. ФОН
     doc.rect(0, 0, doc.page.width, doc.page.height).fill("#ffffff");
 
-    // 2. ДЕКОРАТИВНА РАМКА (подвійна для стилю)
-    doc.lineWidth(1).strokeColor("#d1d1d1").rect(20, 20, doc.page.width - 40, doc.page.height - 40).stroke();
-    doc.lineWidth(8).strokeColor("#1f4f8f").rect(35, 35, doc.page.width - 70, doc.page.height - 70).stroke();
+    // 2. РАМКА (відступили більше місця для дизайну)
+    doc.lineWidth(5).strokeColor("#1f4f8f").rect(25, 25, doc.page.width - 50, doc.page.height - 50).stroke();
 
-    // 3. ЛОГО
-    doc.image("frontend/images/logo.png", doc.page.width / 2 - 60, 60, { width: 120 });
-
-    // 4. ЗАГОЛОВОК
-    doc.fontSize(45).fillColor("#1f4f8f").text("СЕРТИФІКАТ", 0, 200, { align: "center" });
+    // 3. ЛОГО ТА ТЕКСТ (ЗЛІВА ВЕРХУ)
+    doc.image("frontend/images/logo.png", 50, 50, { width: 100 });
     
-    doc.fontSize(16).fillColor("#555").text("Цим документом підтверджується, що", 0, 260, { align: "center" });
+    doc.fontSize(10).fillColor("#777").text(`ID: ${certId}`, 50, 160);
+    doc.fontSize(10).fillColor("#777").text(`Видано: ${date}`, 50, 175);
 
-    // 5. ІМ'Я (основний акцент)
-    doc.fontSize(36).fillColor("#000").text(user.name, 0, 300, { align: "center" });
+    // 4. ЦЕНТРАЛЬНИЙ БЛОК (Ім'я та Курс)
+    doc.fontSize(50).fillColor("#1f4f8f").text("СЕРТИФІКАТ", 0, 220, { align: "center" });
+    doc.fontSize(18).fillColor("#555").text("Цим документом підтверджується, що", 0, 290, { align: "center" });
     
-    // Лінія під іменем
-    doc.moveTo(200, 350).lineTo(doc.page.width - 200, 350).lineWidth(1).strokeColor("#1f4f8f").stroke();
+    doc.fontSize(36).fillColor("#000").text(user.name, 0, 330, { align: "center" });
+    doc.moveTo(250, 380).lineTo(doc.page.width - 250, 380).strokeColor("#1f4f8f").stroke();
 
-    // 6. КУРС
-    doc.fontSize(18).fillColor("#555").text("успішно завершив(ла) навчальний курс", 0, 380, { align: "center" });
-    doc.fontSize(28).fillColor("#1f4f8f").text("Artificial Intelligence Fundamentals", 0, 410, { align: "center" });
+    doc.fontSize(20).fillColor("#555").text("успішно завершив(ла) навчальний курс", 0, 410, { align: "center" });
+    doc.fontSize(28).fillColor("#1f4f8f").text("Artificial Intelligence Fundamentals", 0, 440, { align: "center" });
 
-    // 7. НИЖНЯ ЧАСТИНА (Підписи та печатка)
-    const bottomY = 480;
-    
-    // Печатка (ліворуч)
-    doc.image("frontend/images/stamp.png", 100, bottomY - 20, { width: 100, opacity: 0.8 });
-    
-    // Підпис (праворуч)
-    doc.image("frontend/images/signature.png", doc.page.width - 220, bottomY - 10, { width: 120 });
-    doc.fontSize(12).fillColor("#333").text("Адміністратор платформи", doc.page.width - 245, bottomY + 70, { width: 170, align: "center" });
+    // 5. ПІДПИСИ (внизу справа)
+    const signX = doc.page.width - 250;
+    doc.image("frontend/images/signature.png", signX, 480, { width: 150 });
+    doc.fontSize(12).fillColor("#333").text("Адміністратор платформи", signX, 550, { width: 150, align: "center" });
 
-    // 8. ДАТА ТА ID
-    doc.fontSize(10).fillColor("#999").text(`Дата видачі: ${date} | ID: ${certId}`, 0, 560, { align: "center" });
+    // 6. ПЕЧАТКА (знизу зліва)
+    doc.image("frontend/images/stamp.png", 80, 480, { width: 120, opacity: 0.8 });
 
     doc.end();
   } catch (err) {
