@@ -58,8 +58,36 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
     }
 
     // Перевірка завершення курсу
-    const lang = user.language || "uk";
-    const lessons = await Lesson.find({ language: lang });
+    const ukLessons = await Lesson.find({ language: "uk" });
+    const enLessons = await Lesson.find({ language: "en" });
+    
+    let ukProgress = 0;
+    let enProgress = 0;
+    
+    ukLessons.forEach(l => {
+      ukProgress += progress.get(String(l.lessonNumber)) || 0;
+    });
+    
+    enLessons.forEach(l => {
+      enProgress += progress.get(String(l.lessonNumber)) || 0;
+    });
+    
+    ukProgress = ukLessons.length
+      ? Math.round(ukProgress / ukLessons.length)
+      : 0;
+    
+    enProgress = enLessons.length
+      ? Math.round(enProgress / enLessons.length)
+      : 0;
+    
+    let lang = "uk";
+    
+    if (enProgress === 100) {
+      lang = "en";
+    } else if (ukProgress === 100) {
+      lang = "uk";
+    }
+        const lessons = await Lesson.find({ language: lang });
 
     if (!lessons.length) {
       return res.status(400).json({ message: "Немає уроків" });
