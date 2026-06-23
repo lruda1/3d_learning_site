@@ -50,7 +50,6 @@ app.use(express.json());
 
 
 
-
 app.post("/api/certificate", authMiddleware, async (req, res) => {
   try {
     const user = await User.findOne({ email: req.user.email });
@@ -89,6 +88,10 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
     // 📄 створюємо PDF в памʼяті
     const doc = new PDFDocument({ size: "A4", margin: 50 });
 
+    // font fix (КИРИЛИЦЯ)
+    doc.registerFont('normal', path.join(__dirname, 'fonts/DejaVuSans.ttf'));
+    doc.font('normal');
+    
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=certificate.pdf");
     
