@@ -53,244 +53,56 @@ app.use(express.json());
 app.post("/api/certificate", authMiddleware, async (req, res) => {
   try {
     const user = await User.findOne({ email: req.user.email });
-    if (!user) {
-      return res.status(404).json({ message: "Користувача не знайдено" });
-    }
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-    // ==========================
-    // ПРОГРЕС
-    // ==========================
-    const progress = user.progress instanceof Map
-      ? user.progress
-      : new Map(Object.entries(user.progress || {}));
-
-    const ukLessons = await Lesson.find({ language: "uk" });
-    const enLessons = await Lesson.find({ language: "en" });
-
-    let ukSum = 0;
-    let enSum = 0;
-
-    ukLessons.forEach(l => {
-      ukSum += progress.get(String(l.lessonNumber)) || 0;
-    });
-
-    enLessons.forEach(l => {
-      enSum += progress.get(String(l.lessonNumber)) || 0;
-    });
-
-    const ukProgress = ukLessons.length
-      ? Math.round(ukSum / ukLessons.length)
-      : 0;
-
-    const enProgress = enLessons.length
-      ? Math.round(enSum / enLessons.length)
-      : 0;
-
-    // ==========================
-    // 🔥 ГОЛОВНЕ ВИПРАВЛЕННЯ
-    // ==========================
-    let lang = req.body.lang; // 👈 беремо з фронта
-
-    // fallback якщо не передали
-    if (!lang) {
-      if (enProgress >= ukProgress) {
-        lang = "en";
-      } else {
-        lang = "uk";
-      }
-    }
-
-    const lessons = await Lesson.find({ language: lang });
-
-    if (!lessons.length) {
-      return res.status(400).json({ message: "Немає уроків" });
-    }
-
-    let total = 0;
-
-    lessons.forEach(l => {
-      total += progress.get(String(l.lessonNumber)) || 0;
-    });
-
-    const avg = Math.round(total / lessons.length);
-
-    if (avg < 100) {
-      return res.status(400).json({
-        message: "Курс ще не завершено"
-      });
-    }
-
-    // ==========================
-    // ТЕКСТИ
-    // ==========================
-    const isUk = lang === "uk";
-
-    const certTitle = isUk ? "СЕРТИФІКАТ" : "CERTIFICATE";
-    const certText = isUk
-      ? "Цей сертифікат засвідчує, що"
-      : "This is to certify that";
-
-    const completedText = isUk
-      ? "успішно завершив(ла) курс"
-      : "has successfully completed the course";
-
-    const courseName = isUk
-      ? "Основи штучного інтелекту"
-      : "Artificial Intelligence Fundamentals";
-
-    const adminText = isUk
-      ? "Адміністратор платформи"
-      : "Platform Administrator";
-
-    const issuedText = isUk ? "Видано" : "Issued";
-    const idText = "ID";
-
-    const date = new Date().toLocaleDateString(isUk ? "uk-UA" : "en-GB");
-
-    const certId =
-      "3DL-" + new Date().getFullYear() + "-" + Math.floor(Math.random() * 999999);
-
-    // ==========================
-    // PDF
-    // ==========================
-    const doc = new PDFDocument({
-      size: "A4",
-      layout: "landscape",
-      margin: 0
-    });
-
+    const doc = new PDFDocument({ size: "A4", layout: "landscape", margin: 0 });
+    
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=certificate.pdf");
-
     doc.pipe(res);
+    
+    doc.registerFont("DejaVuSans", path.join(__dirname, "frontend/css/font/DejaVuSans.ttf"));
+    doc.font("DejaVuSans"); 
+    
+    const date = new Date().toLocaleDateString("en-GB"); // Формат дати: DD/MM/YYYY
+    const certId = "3DL-" + new Date().getFullYear() + "-" + Math.floor(Math.random() * 999999);
 
-    doc.registerFont(
-      "DejaVuSans",
-      path.join(__dirname, "frontend/css/font/DejaVuSans.ttf")
-    );
-
-    doc.font("DejaVuSans");
-
-        // Фон
-        doc.rect(0, 0, doc.page.width, doc.page.height)
-        .fill("#ffffff");
-  
-      // Логотип
-      if (
-        fs.existsSync(
-          path.join(__dirname, "frontend/images/logo.png")
-        )
-      ) {
-        doc.image(
-          path.join(
-            __dirname,
-            "frontend/images/logo.png"
-          ),
-          50,
-          50,
-          { width: 120 }
-        );
-      }
-  
-  
-      doc.moveTo(250, 330)
-        .lineTo(doc.page.width - 250, 330)
-        .strokeColor("#1f4f8f")
-        .stroke();
-  
-      // Підпис
-      const signPath = path.join(
-        __dirname,
-        "frontend/images/signature.png"
-      );
-  
-      const signX = doc.page.width - 220;
-  
-      if (fs.existsSync(signPath)) {
-        doc.image(signPath, signX, 410, {
-          width: 130
-        });
-      }
-  
-      doc.fontSize(12)
-        .fillColor("#333")
-        .text(
-          adminText,
-          signX - 10,
-          480,
-          {
-            width: 150,
-            align: "center"
-          }
-        );
-  
-      // Печатка
-      const stampPath = path.join(
-        __dirname,
-        "frontend/images/stamp.png"
-      );
-  
-      if (fs.existsSync(stampPath)) {
-        doc.image(stampPath, 45, 360, {
-          width: 210,
-          height: 170
-        });
-      }
-  
-      // Дата та номер
-      const metaX = doc.page.width - 200;
-  
-      doc.fontSize(10)
-        .fillColor("#777")
-        .text(
-          `${idText}: ${certId}`,
-          metaX,
-          525,
-          {
-            width: 150,
-            align: "right"
-          }
-        );
-  
-      doc.fontSize(10)
-        .fillColor("#777")
-        .text(
-          `${issuedText}: ${date}`,
-          metaX,
-          540,
-          {
-            width: 150,
-            align: "right"
-          }
-        );
-  
+    // 1. BACKGROUND
     doc.rect(0, 0, doc.page.width, doc.page.height).fill("#ffffff");
 
-    doc.lineWidth(5)
-      .strokeColor("#1f4f8f")
-      .rect(25, 25, doc.page.width - 50, doc.page.height - 50)
-      .stroke();
+    // 2. BORDER
+    doc.lineWidth(5).strokeColor("#1f4f8f").rect(25, 25, doc.page.width - 50, doc.page.height - 50).stroke();
 
-    doc.fontSize(50).fillColor("#1f4f8f")
-      .text(certTitle, 0, 160, { align: "center" });
+    // 3. LOGO
+    doc.image("frontend/images/logo.png", 50, 50, { width: 120 });
 
-    doc.fontSize(18).fillColor("#555")
-      .text(certText, 0, 230, { align: "center" });
+    // 4. CENTRAL BLOCK
+    doc.fontSize(50).fillColor("#1f4f8f").text("CERTIFICATE", 0, 160, { align: "center" });
+    doc.fontSize(18).fillColor("#555").text("This is to certify that", 0, 230, { align: "center" });
+    
+    doc.fontSize(36).fillColor("#000").text(user.name, 0, 290, { align: "center" });
+    doc.moveTo(250, 330).lineTo(doc.page.width - 250, 330).strokeColor("#1f4f8f").stroke();
 
-    doc.fontSize(36).fillColor("#000")
-      .text(user.name, 0, 290, { align: "center" });
+    doc.fontSize(20).fillColor("#555").text("has successfully completed the course", 0, 360, { align: "center" });
+    doc.fontSize(26).fillColor("#1f4f8f").text("Artificial Intelligence Fundamentals", 0, 390, { align: "center" });
 
-    doc.fontSize(20).fillColor("#555")
-      .text(completedText, 0, 360, { align: "center" });
+    // 5. SIGNATURES
+    const signX = doc.page.width - 220;
+    doc.image("frontend/images/signature.png", signX, 410, { width: 130 });
+    doc.fontSize(12).fillColor("#333").text("Platform Administrator", signX - 10, 480, { width: 150, align: "center" });
 
-    doc.fontSize(26).fillColor("#1f4f8f")
-      .text(courseName, 0, 395, { align: "center" });
+    // 6. STAMP
+    doc.image("frontend/images/stamp.png", 45, 360, { width: 210, height: 170, opacity: 0.8 });
+
+    // 7. ID AND DATE
+    const metaX = doc.page.width - 200;
+    doc.fontSize(10).fillColor("#777").text(`ID: ${certId}`, metaX, 525, { width: 150, align: "right" });
+    doc.fontSize(10).fillColor("#777").text(`Issued: ${date}`, metaX, 540, { width: 150, align: "right" });
 
     doc.end();
-
   } catch (err) {
     console.error("CERT ERROR:", err);
-    res.status(500).json({ message: "Помилка створення сертифіката" });
+    res.status(500).json({ message: "Error generating certificate" });
   }
 });
 
