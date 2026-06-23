@@ -57,147 +57,115 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
       return res.status(404).json({ message: "Користувача не знайдено" });
     }
 
-    const lang = user.language || "uk";
-    const lessons = await Lesson.find({ language: lang });
-
-    if (!lessons.length) {
-      return res.status(400).json({ message: "Немає уроків" });
-    }
-
-    const progress =
-      user.progress instanceof Map
-        ? Object.fromEntries(user.progress)
-        : user.progress || {};
-
-    let total = 0;
-
-    lessons.forEach((l) => {
-      const key = String(l.lessonNumber);
-      total += Number(progress[key] || 0);
+    const doc = new PDFDocument({
+      size: "A4",
+      layout: "landscape", // 👈 ВАЖЛИВО (як справжній сертифікат)
+      margin: 0
     });
 
-    const avg = Math.round(total / lessons.length);
-
-    if (avg < 100) {
-      return res.status(400).json({ message: "Курс ще не завершено" });
-    }
-
-    const doc = new PDFDocument({ size: "A4", margin: 50 });
-
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader(
-      "Content-Disposition",
-      "attachment; filename=certificate.pdf"
-    );
+    res.setHeader("Content-Disposition", "attachment; filename=certificate.pdf");
 
     doc.pipe(res);
 
     const date = new Date().toLocaleDateString("uk-UA");
 
-    // 🔵 ФОН
-    doc.rect(0, 0, doc.page.width, doc.page.height).fill("#f4f6fb");
+    // =========================
+    // 📌 ФОН
+    // =========================
+    doc.rect(0, 0, doc.page.width, doc.page.height)
+      .fill("#f4f7fb");
 
-    // 🔷 РАМКА
-    doc
-      .rect(25, 25, doc.page.width - 50, doc.page.height - 50)
+    // =========================
+    // 📌 РАМКА
+    // =========================
+    doc.rect(30, 30, doc.page.width - 60, doc.page.height - 60)
       .lineWidth(3)
-      .strokeColor("#1f6feb")
+      .strokeColor("#1f4f8f")
       .stroke();
 
-    // 🏷 ЛОГО (як текст-заглушка)
-    doc
-      .fontSize(14)
-      .fillColor("#1f6feb")
-      .text("3DLearningSite", 50, 50);
+    // =========================
+    // 📌 ЛОГО (PNG)
+    // =========================
+    doc.image("images/logo.png", 60, 50, { width: 120 });
 
-    // 🏆 ЗАГОЛОВОК
+    // =========================
+    // 📌 ЗАГОЛОВОК
+    // =========================
     doc
-      .fontSize(36)
-      .fillColor("#111")
+      .fontSize(42)
+      .fillColor("#1f4f8f")
       .text("СЕРТИФІКАТ", 0, 120, { align: "center" });
 
-    doc.moveDown(1);
-
     doc
       .fontSize(18)
-      .fillColor("#555")
-      .text("Цей сертифікат підтверджує, що", {
-        align: "center",
-      });
+      .fillColor("#444")
+      .text("Цей сертифікат засвідчує, що", { align: "center" });
 
-    doc.moveDown(2);
-
-    // 👤 ІМ’Я
+    // =========================
+    // 📌 ІМ'Я
+    // =========================
     doc
       .fontSize(30)
-      .fillColor("#1f6feb")
+      .fillColor("#111")
       .text(user.name, { align: "center", underline: true });
 
-    doc.moveDown(2);
-
-    // 📚 КУРС
-    doc
-      .fontSize(18)
-      .fillColor("#333")
-      .text('успішно завершив(ла) курс', { align: "center" });
-
     doc.moveDown(1);
 
+    // =========================
+    // 📌 КУРС
+    // =========================
     doc
-      .fontSize(22)
-      .fillColor("#111")
-      .text('"Artificial Intelligence Fundamentals"', {
-        align: "center",
+      .fontSize(20)
+      .fillColor("#1f4f8f")
+      .text("успішно завершив(ла) курс", { align: "center" });
+
+    doc
+      .fontSize(24)
+      .fillColor("#333")
+      .text("Artificial Intelligence Fundamentals", {
+        align: "center"
       });
 
-    doc.moveDown(1);
-
+    // =========================
+    // 📌 ДАТА
+    // =========================
     doc
-      .fontSize(16)
-      .fillColor("#555")
-      .text("на платформі 3DLearningSite", { align: "center" });
+      .fontSize(14)
+      .fillColor("#666")
+      .text(`Дата видачі: ${date}`, 0, 420, { align: "center" });
 
-    doc.moveDown(3);
+    // =========================
+    // 📌 ПІДПИС (PNG)
+    // =========================
+    doc.image("images/signature.png", 500, 430, { width: 120 });
 
-    // 📅 ДАТА
     doc
       .fontSize(12)
-      .fillColor("#777")
-      .text(`Дата видачі: ${date}`, { align: "center" });
+      .fillColor("#333")
+      .text("Адміністратор", 520, 520);
 
-    // 🔢 СЕРІЙНИЙ НОМЕР
+    // =========================
+    // 📌 ПЕЧАТКА (PNG)
+    // =========================
+    doc.image("images/stamp.png", 80, 420, { width: 120 });
+
+    // =========================
+    // 📌 СЕРІЙНИЙ НОМЕР
+    // =========================
     const certId =
-      "3DL-" + new Date().getFullYear() + "-" + Math.floor(Math.random() * 999999);
-
-    doc
-      .fontSize(12)
-      .fillColor("#777")
-      .text(`Серійний номер: ${certId}`, 50, 700);
-
-    // ✍️ ПІДПИС
-    doc
-      .fontSize(12)
-      .fillColor("#333")
-      .text("__________________________", 380, 680);
-
-    doc
-      .fontSize(12)
-      .fillColor("#333")
-      .text("Адміністратор курсу", 400, 700);
-
-    // 🏅 ПЕЧАТКА (простий графічний круг)
-    doc
-      .circle(100, 650, 40)
-      .lineWidth(2)
-      .strokeColor("#1f6feb")
-      .stroke();
+      "3DL-" +
+      new Date().getFullYear() +
+      "-" +
+      Math.floor(Math.random() * 999999);
 
     doc
       .fontSize(10)
-      .fillColor("#1f6feb")
-      .text("VERIFIED", 75, 645);
+      .fillColor("#777")
+      .text(`ID: ${certId}`, 0, 560, { align: "center" });
 
     doc.end();
+
   } catch (err) {
     console.error("CERT ERROR:", err);
     res.status(500).json({ message: "Помилка створення сертифіката" });
