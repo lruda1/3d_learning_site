@@ -50,6 +50,7 @@ app.use(express.json());
 
 
 
+
 app.post("/api/certificate", authMiddleware, async (req, res) => {
   try {
     const user = await User.findOne({ email: req.user.email });
@@ -94,73 +95,173 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
     doc.pipe(res);
     
     const date = new Date().toLocaleDateString("uk-UA");
+
+    const logoPath = path.join(__dirname, "images/logo.png");
+    const signPath = path.join(__dirname, "images/signature.png");
+    const sealPath = path.join(__dirname, "images/seal.png");
     
-    // 🌟 ФОН-СТИЛЬ (легкий декоративний ефект)
+    // фон
     doc.rect(0, 0, doc.page.width, doc.page.height)
-      .fill("#f5f7fb");
+       .fill("#f7f8fb");
     
-    // 🟦 РАМКА
-    doc.rect(25, 25, doc.page.width - 50, doc.page.height - 50)
-      .lineWidth(3)
-      .strokeColor("#1f6feb")
-      .stroke();
+    // водяний знак
+    doc.save();
+    doc.opacity(0.06);
     
-    // 🏆 HEADER
+    doc.circle(120, 180, 120)
+       .fill("#1f4f8f");
+    
+    doc.restore();
+    
+    // нижня синя панель
+    doc.rect(0, doc.page.height - 60, doc.page.width, 60)
+       .fill("#163763");
+    
+    // логотип
+    if (fs.existsSync(logoPath)) {
+      doc.image(logoPath, 370, 720, {
+        width: 180
+      });
+    }
+    
+    // дата
     doc
-      .fontSize(34)
-      .fillColor("#111")
-      .text("CERTIFICATE", { align: "center", baseline: "middle" });
+      .fontSize(12)
+      .fillColor("#666")
+      .text(`Виданий ${date}`, 420, 40);
     
+    // заголовок
     doc
-      .fontSize(20)
-      .fillColor("#555")
-      .text("OF COMPLETION", { align: "center" });
+      .fontSize(58)
+      .fillColor("#4a76b8")
+      .text("СЕРТИФІКАТ", 220, 120);
     
-    // ✨ СПЕЙС
-    doc.moveDown(2);
+    // текст
+    doc
+      .fontSize(18)
+      .fillColor("#666")
+      .text(
+        "Цей сертифікат засвідчує, що",
+        230,
+        210
+      );
     
-    // 👤 ІМ’Я
+    // ім'я
     doc
       .fontSize(28)
-      .fillColor("#1f6feb")
-      .text(user.name, {
-        align: "center",
-        underline: true
-      });
+      .fillColor("#222")
+      .text(
+        user.name,
+        230,
+        245
+      );
     
-    // 📄 ОПИС
-    doc.moveDown(2);
+    // завершив курс
+    doc
+      .fontSize(18)
+      .fillColor("#666")
+      .text(
+        "успішно завершив(ла) курс",
+        230,
+        310
+      );
+    
+    // назва курсу
+    doc
+      .fontSize(24)
+      .fillColor("#163763")
+      .text(
+        "3DLearningSite AI Course",
+        230,
+        350,
+        {
+          width: 280
+        }
+      );
+    
+    // підпис
+    if (fs.existsSync(signPath)) {
+      doc.image(signPath, 260, 430, {
+        width: 120
+      });
+    }
     
     doc
       .fontSize(14)
       .fillColor("#333")
       .text(
-        "This is to certify that the student has successfully completed the AI Course from scratch and demonstrated understanding of the material.",
-        {
-          align: "center",
-          width: 420,
-          lineGap: 6
-        }
+        "Адміністратор платформи",
+        230,
+        490
       );
     
-    // 📅 ДАТА
-    doc.moveDown(3);
+    // печатка
+    if (fs.existsSync(sealPath)) {
+      doc.image(sealPath, 40, 180, {
+        width: 220
+      });
+    }
+    
+    // якщо печатки немає
+    if (!fs.existsSync(sealPath)) {
+    
+      doc.circle(140, 290, 90)
+         .lineWidth(6)
+         .strokeColor("#4a76b8")
+         .stroke();
+    
+      doc.circle(140, 290, 70)
+         .strokeColor("#4a76b8")
+         .stroke();
+    
+      doc
+        .fontSize(22)
+        .fillColor("#4a76b8")
+        .text(
+          "3D",
+          122,
+          275
+        );
+    
+      doc
+        .fontSize(12)
+        .text(
+          "LEARNING",
+          105,
+          305
+        );
+    }
+    
+    // серійний номер
+    const serial =
+      "3DL-" +
+      new Date().getFullYear() +
+      "-" +
+      Math.floor(
+        100000 + Math.random() * 900000
+      );
     
     doc
       .fontSize(12)
       .fillColor("#666")
-      .text(`Date: ${date}`, { align: "center" });
+      .text(
+        `Серійний номер: ${serial}`,
+        230,
+        580
+      );
     
-    // 🏅 ПЕЧАТКА (імітація)
-    doc.circle(doc.page.width / 2, 680, 45)
-      .strokeColor("#1f6feb")
-      .lineWidth(2)
-      .stroke();
-    
+    // перевірка
     doc
       .fontSize(10)
-      .fillColor("#1f6feb")
-      .text("AI COURSE", doc.page.width / 2 - 28, 670);
+      .fillColor("#888")
+      .text(
+        "Автентичність сертифіката можна перевірити в системі 3DLearningSite",
+        230,
+        650,
+        {
+          width: 300
+        }
+      );
     
     doc.end();
 
