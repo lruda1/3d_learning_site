@@ -157,16 +157,21 @@ mobileNav.addEventListener('change', (e) => {
     // Завантажити загальний прогрес
     async function loadProgressSummary() {
   try {
-    const res = await fetch(API_URL + '/profile/progress', {
-      headers: { Authorization: 'Bearer ' + token }
-    });
-
-    if (!res.ok) throw new Error('HTTP error ' + res.status);
-
+    
     const data = await res.json();
     console.log('Прогрес:', data);
 
     const lang = document.getElementById("languageSelect").value;
+
+const res = await fetch(API_URL + "/certificate", {
+  method: "POST",
+  headers: {
+    Authorization: "Bearer " + localStorage.getItem("token"),
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ lang })
+});
+if (!res.ok) throw new Error('HTTP error ' + res.status);
 
     const certBtn = document.getElementById("certificateBtn");
 
