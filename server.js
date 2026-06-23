@@ -59,15 +59,23 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
 
     const doc = new PDFDocument({
       size: "A4",
-      layout: "landscape", // 👈 ВАЖЛИВО (як справжній сертифікат)
+      layout: "landscape",
       margin: 0
     });
-
+    
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=certificate.pdf");
-
+    
     doc.pipe(res);
-
+    
+    // 🔥 ВАЖЛИВО: шрифт Unicode
+    doc.registerFont(
+      "DejaVuSans",
+      path.join(__dirname, "frontend/css/font/DejaVuSans.ttf")
+    );
+    
+    doc.font("DejaVuSans"); 
+    
     const date = new Date().toLocaleDateString("uk-UA");
 
     // =========================
