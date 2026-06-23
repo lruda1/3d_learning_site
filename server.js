@@ -93,12 +93,12 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
     doc.fontSize(12).fillColor("#333").text("Адміністратор платформи", signX - 10, 480, { width: 150, align: "center" });
 
     // 6. ПЕЧАТКА
-    doc.image("frontend/images/stamp.png", 50, 360, { width: 210, height: 180, opacity: 0.8 });
+    doc.image("frontend/images/stamp.png", 45, 360, { width: 210, height: 170, opacity: 0.8 });
 
     // 7. ID ТА ДАТА (справа знизу)
     const metaX = doc.page.width - 200;
-    doc.fontSize(10).fillColor("#777").text(`ID: ${certId}`, metaX, 520, { width: 150, align: "right" });
-    doc.fontSize(10).fillColor("#777").text(`Видано: ${date}`, metaX, 535, { width: 150, align: "right" });
+    doc.fontSize(10).fillColor("#777").text(`ID: ${certId}`, metaX, 525, { width: 150, align: "right" });
+    doc.fontSize(10).fillColor("#777").text(`Видано: ${date}`, metaX, 540, { width: 150, align: "right" });
 
     doc.end();
   } catch (err) {
