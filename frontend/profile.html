@@ -157,16 +157,17 @@ mobileNav.addEventListener('change', (e) => {
     // Завантажити загальний прогрес
     async function loadProgressSummary() {
   try {
-    const res = await fetch(API_URL + "/profile/progress", {
-      headers: { Authorization: "Bearer " + token }
+    const res = await fetch(API_URL + '/profile/progress', {
+      headers: { Authorization: 'Bearer ' + token }
     });
 
-    if (!res.ok) throw new Error("HTTP error " + res.status);
+    if (!res.ok) throw new Error('HTTP error ' + res.status);
 
     const data = await res.json();
-    console.log("Прогрес:", data);
+    console.log('Прогрес:', data);
 
     const lang = document.getElementById("languageSelect").value;
+
     const certBtn = document.getElementById("certificateBtn");
 
     const ukProgress = data.uk?.overallProgress || 0;
@@ -178,18 +179,17 @@ mobileNav.addEventListener('change', (e) => {
         ? "Отримати сертифікат"
         : "Get Certificate";
 
-    // показ кнопки тільки якщо курс завершено
-    if (ukProgress === 100 || enProgress === 100) {
-      certBtn.style.display = "block";
-    } else {
-      certBtn.style.display = "none";
-    }
+    // показ кнопки
+    certBtn.style.display =
+      (ukProgress === 100 || enProgress === 100)
+        ? "block"
+        : "none";
 
-    const containerUk = document.getElementById("progressUk");
-    const containerEn = document.getElementById("progressEn");
+    const containerUk = document.getElementById('progressUk');
+    const containerEn = document.getElementById('progressEn');
 
-    containerUk.innerHTML = "";
-    containerEn.innerHTML = "";
+    containerUk.innerHTML = '';
+    containerEn.innerHTML = '';
 
     if (lang === "uk") {
       containerUk.innerHTML = `
@@ -208,7 +208,7 @@ mobileNav.addEventListener('change', (e) => {
     }
 
   } catch (err) {
-    console.error("Помилка завантаження прогресу:", err);
+    console.error('Помилка завантаження прогресу:', err);
   }
 }
 
