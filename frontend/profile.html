@@ -55,9 +55,10 @@
       <div id="progressUk"></div>
 <div id="progressEn"></div>
 
-<button id="certificateBtn" style="display:none; margin-top:10px;">
+<button id="certificateBtn" class="certificate-btn" style="display:none;">
   Отримати сертифікат
 </button>
+
       <button class="logout" id="logoutBtn">Вийти</button>
     </div>
 
@@ -165,8 +166,20 @@ mobileNav.addEventListener('change', (e) => {
     const data = await res.json();
     console.log('Прогрес:', data);
 
-    const certBtn = document.getElementById("certificateBtn");
 
+// текст кнопки
+if (lang === "uk") {
+  certBtn.textContent = "Отримати сертифікат";
+} else {
+  certBtn.textContent = "Get certificate";
+}
+
+// показ кнопки
+if (ukProgress === 100 || enProgress === 100) {
+  certBtn.style.display = "block";
+} else {
+  certBtn.style.display = "none";
+}
 let ukProgress = data.uk.overallProgress;
 let enProgress = data.en.overallProgress;
 
