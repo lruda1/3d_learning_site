@@ -53,7 +53,7 @@ app.use(express.json());
 app.post("/api/certificate", authMiddleware, async (req, res) => {
   try {
     const user = await User.findOne({ email: req.user.email });
-    if (!user) return res.status(404).json({ message: "Користувача не знайдено" });
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     const doc = new PDFDocument({ size: "A4", layout: "landscape", margin: 0 });
     
@@ -64,46 +64,45 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
     doc.registerFont("DejaVuSans", path.join(__dirname, "frontend/css/font/DejaVuSans.ttf"));
     doc.font("DejaVuSans"); 
     
-    const date = new Date().toLocaleDateString("uk-UA");
+    const date = new Date().toLocaleDateString("en-GB"); // Формат дати: DD/MM/YYYY
     const certId = "3DL-" + new Date().getFullYear() + "-" + Math.floor(Math.random() * 999999);
 
-    // 1. ФОН
+    // 1. BACKGROUND
     doc.rect(0, 0, doc.page.width, doc.page.height).fill("#ffffff");
 
-    // 2. РАМКА
+    // 2. BORDER
     doc.lineWidth(5).strokeColor("#1f4f8f").rect(25, 25, doc.page.width - 50, doc.page.height - 50).stroke();
 
-    // 3. ЛОГО (тепер просто зліва вгорі, без зайвого тексту)
+    // 3. LOGO
     doc.image("frontend/images/logo.png", 50, 50, { width: 120 });
 
-    // 4. ЦЕНТРАЛЬНИЙ БЛОК
-    doc.fontSize(50).fillColor("#1f4f8f").text("СЕРТИФІКАТ", 0, 160, { align: "center" });
-    doc.fontSize(18).fillColor("#555").text("Цим документом підтверджується, що", 0, 230, { align: "center" });
+    // 4. CENTRAL BLOCK
+    doc.fontSize(50).fillColor("#1f4f8f").text("CERTIFICATE", 0, 160, { align: "center" });
+    doc.fontSize(18).fillColor("#555").text("This is to certify that", 0, 230, { align: "center" });
     
     doc.fontSize(36).fillColor("#000").text(user.name, 0, 290, { align: "center" });
     doc.moveTo(250, 330).lineTo(doc.page.width - 250, 330).strokeColor("#1f4f8f").stroke();
 
-    doc.fontSize(20).fillColor("#555").text("успішно завершив(ла) навчальний курс", 0, 360, { align: "center" });
+    doc.fontSize(20).fillColor("#555").text("has successfully completed the course", 0, 360, { align: "center" });
     doc.fontSize(26).fillColor("#1f4f8f").text("Artificial Intelligence Fundamentals", 0, 390, { align: "center" });
 
-    // 5. ПІДПИСИ (змістили вище, щоб не заходити на рамку)
+    // 5. SIGNATURES
     const signX = doc.page.width - 220;
     doc.image("frontend/images/signature.png", signX, 410, { width: 130 });
-    // Текст тепер вище (430 + 70 = 500), безпечна зона
-    doc.fontSize(12).fillColor("#333").text("Адміністратор платформи", signX - 10, 480, { width: 150, align: "center" });
+    doc.fontSize(12).fillColor("#333").text("Platform Administrator", signX - 10, 480, { width: 150, align: "center" });
 
-    // 6. ПЕЧАТКА
+    // 6. STAMP
     doc.image("frontend/images/stamp.png", 45, 360, { width: 210, height: 170, opacity: 0.8 });
 
-    // 7. ID ТА ДАТА (справа знизу)
+    // 7. ID AND DATE
     const metaX = doc.page.width - 200;
     doc.fontSize(10).fillColor("#777").text(`ID: ${certId}`, metaX, 525, { width: 150, align: "right" });
-    doc.fontSize(10).fillColor("#777").text(`Видано: ${date}`, metaX, 540, { width: 150, align: "right" });
+    doc.fontSize(10).fillColor("#777").text(`Issued: ${date}`, metaX, 540, { width: 150, align: "right" });
 
     doc.end();
   } catch (err) {
     console.error("CERT ERROR:", err);
-    res.status(500).json({ message: "Помилка створення сертифіката" });
+    res.status(500).json({ message: "Error generating certificate" });
   }
 });
 
