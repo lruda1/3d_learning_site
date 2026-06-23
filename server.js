@@ -58,7 +58,7 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
     }
 
     // ==========================
-    // ПРОГРЕС (СПОЧАТКУ ОГОЛОШУЄМО!)
+    // ПРОГРЕС
     // ==========================
     const progress = user.progress instanceof Map
       ? user.progress
@@ -87,14 +87,17 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
       : 0;
 
     // ==========================
-    // ВИБІР МОВИ СЕРТИФІКАТА
+    // 🔥 ГОЛОВНЕ ВИПРАВЛЕННЯ
     // ==========================
-    let lang = "uk";
+    let lang = req.body.lang; // 👈 беремо з фронта
 
-    if (enProgress === 100 && ukProgress !== 100) {
-      lang = "en";
-    } else if (ukProgress === 100) {
-      lang = "uk";
+    // fallback якщо не передали
+    if (!lang) {
+      if (enProgress >= ukProgress) {
+        lang = "en";
+      } else {
+        lang = "uk";
+      }
     }
 
     const lessons = await Lesson.find({ language: lang });
@@ -118,7 +121,7 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
     }
 
     // ==========================
-    // МОВА ТЕКСТУ
+    // ТЕКСТИ
     // ==========================
     const isUk = lang === "uk";
 
@@ -142,15 +145,10 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
     const issuedText = isUk ? "Видано" : "Issued";
     const idText = "ID";
 
-    const date = new Date().toLocaleDateString(
-      isUk ? "uk-UA" : "en-GB"
-    );
+    const date = new Date().toLocaleDateString(isUk ? "uk-UA" : "en-GB");
 
     const certId =
-      "3DL-" +
-      new Date().getFullYear() +
-      "-" +
-      Math.floor(Math.random() * 999999);
+      "3DL-" + new Date().getFullYear() + "-" + Math.floor(Math.random() * 999999);
 
     // ==========================
     // PDF
@@ -173,36 +171,21 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
 
     doc.font("DejaVuSans");
 
-    // фон
     doc.rect(0, 0, doc.page.width, doc.page.height).fill("#ffffff");
 
-    // рамка
     doc.lineWidth(5)
       .strokeColor("#1f4f8f")
       .rect(25, 25, doc.page.width - 50, doc.page.height - 50)
       .stroke();
 
-    // логотип
-    const logoPath = path.join(__dirname, "frontend/images/logo.png");
-    if (fs.existsSync(logoPath)) {
-      doc.image(logoPath, 50, 50, { width: 120 });
-    }
-
-    // заголовок
     doc.fontSize(50).fillColor("#1f4f8f")
       .text(certTitle, 0, 160, { align: "center" });
 
     doc.fontSize(18).fillColor("#555")
       .text(certText, 0, 230, { align: "center" });
 
-    // ім'я
     doc.fontSize(36).fillColor("#000")
       .text(user.name, 0, 290, { align: "center" });
-
-    doc.moveTo(250, 330)
-      .lineTo(doc.page.width - 250, 330)
-      .strokeColor("#1f4f8f")
-      .stroke();
 
     doc.fontSize(20).fillColor("#555")
       .text(completedText, 0, 360, { align: "center" });
@@ -210,39 +193,11 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
     doc.fontSize(26).fillColor("#1f4f8f")
       .text(courseName, 0, 395, { align: "center" });
 
-    // підпис
-    const signPath = path.join(__dirname, "frontend/images/signature.png");
-    const signX = doc.page.width - 220;
-
-    if (fs.existsSync(signPath)) {
-      doc.image(signPath, signX, 410, { width: 130 });
-    }
-
-    doc.fontSize(12).fillColor("#333")
-      .text(adminText, signX - 10, 480, { width: 150, align: "center" });
-
-    // печатка
-    const stampPath = path.join(__dirname, "frontend/images/stamp.png");
-
-    if (fs.existsSync(stampPath)) {
-      doc.image(stampPath, 45, 360, { width: 210, height: 170 });
-    }
-
-    // дата + id
-    const metaX = doc.page.width - 200;
-
-    doc.fontSize(10).fillColor("#777")
-      .text(`${idText}: ${certId}`, metaX, 525, { align: "right" });
-
-    doc.text(`${issuedText}: ${date}`, metaX, 540, { align: "right" });
-
     doc.end();
 
   } catch (err) {
     console.error("CERT ERROR:", err);
-    res.status(500).json({
-      message: "Помилка створення сертифіката"
-    });
+    res.status(500).json({ message: "Помилка створення сертифіката" });
   }
 });
 
