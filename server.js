@@ -171,6 +171,99 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
 
     doc.font("DejaVuSans");
 
+        // Фон
+        doc.rect(0, 0, doc.page.width, doc.page.height)
+        .fill("#ffffff");
+  
+      // Логотип
+      if (
+        fs.existsSync(
+          path.join(__dirname, "frontend/images/logo.png")
+        )
+      ) {
+        doc.image(
+          path.join(
+            __dirname,
+            "frontend/images/logo.png"
+          ),
+          50,
+          50,
+          { width: 120 }
+        );
+      }
+  
+  
+      doc.moveTo(250, 330)
+        .lineTo(doc.page.width - 250, 330)
+        .strokeColor("#1f4f8f")
+        .stroke();
+  
+      // Підпис
+      const signPath = path.join(
+        __dirname,
+        "frontend/images/signature.png"
+      );
+  
+      const signX = doc.page.width - 220;
+  
+      if (fs.existsSync(signPath)) {
+        doc.image(signPath, signX, 410, {
+          width: 130
+        });
+      }
+  
+      doc.fontSize(12)
+        .fillColor("#333")
+        .text(
+          adminText,
+          signX - 10,
+          480,
+          {
+            width: 150,
+            align: "center"
+          }
+        );
+  
+      // Печатка
+      const stampPath = path.join(
+        __dirname,
+        "frontend/images/stamp.png"
+      );
+  
+      if (fs.existsSync(stampPath)) {
+        doc.image(stampPath, 45, 360, {
+          width: 210,
+          height: 170
+        });
+      }
+  
+      // Дата та номер
+      const metaX = doc.page.width - 200;
+  
+      doc.fontSize(10)
+        .fillColor("#777")
+        .text(
+          `${idText}: ${certId}`,
+          metaX,
+          525,
+          {
+            width: 150,
+            align: "right"
+          }
+        );
+  
+      doc.fontSize(10)
+        .fillColor("#777")
+        .text(
+          `${issuedText}: ${date}`,
+          metaX,
+          540,
+          {
+            width: 150,
+            align: "right"
+          }
+        );
+  
     doc.rect(0, 0, doc.page.width, doc.page.height).fill("#ffffff");
 
     doc.lineWidth(5)
