@@ -87,7 +87,7 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
     // =========================
     // 📌 ЛОГО (PNG)
     // =========================
-    doc.image("images/logo.png", 60, 50, { width: 120 });
+    doc.image("frontend/images/logo.png", 60, 50, { width: 120 });
 
     // =========================
     // 📌 ЗАГОЛОВОК
@@ -138,7 +138,7 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
     // =========================
     // 📌 ПІДПИС (PNG)
     // =========================
-    doc.image("images/signature.png", 500, 430, { width: 120 });
+    doc.image("frontend/images/signature.png", 500, 430, { width: 120 });
 
     doc
       .fontSize(12)
@@ -148,7 +148,7 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
     // =========================
     // 📌 ПЕЧАТКА (PNG)
     // =========================
-    doc.image("images/stamp.png", 80, 420, { width: 120 });
+    doc.image("frontend/images/stamp.png", 80, 420, { width: 120 });
 
     // =========================
     // 📌 СЕРІЙНИЙ НОМЕР
