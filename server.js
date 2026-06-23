@@ -93,7 +93,7 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
     doc.fontSize(12).fillColor("#333").text("Адміністратор платформи", signX - 10, 480, { width: 150, align: "center" });
 
     // 6. ПЕЧАТКА
-    doc.image("frontend/images/stamp.png", 70, 380, { width: 210, height: 215, opacity: 0.8 });
+    doc.image("frontend/images/stamp.png", 60, 360, { width: 210, height: 200, opacity: 0.8 });
 
     // 7. ID ТА ДАТА (справа знизу)
     const metaX = doc.page.width - 200;
