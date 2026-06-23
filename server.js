@@ -64,26 +64,24 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
       return res.status(400).json({ message: "Немає уроків" });
     }
 
-    const progress = user.progress instanceof Map
-      ? user.progress
-      : new Map(Object.entries(user.progress || {}));
-
-    let total = 0;
-
-    lessons.forEach(l => {
-      const key = String(l.lessonNumber);
-      const value = progress.get
-        ? (progress.get(key) || 0)
-        : (progress[key] || 0);
-
-      total += value;
-    });
-
-    const avg = Math.round(total / lessons.length);
-
-    if (avg < 100) {
-      return res.status(400).json({ message: "Курс ще не завершено" });
-    }
+    const progressObj =
+    user.progress instanceof Map
+      ? Object.fromEntries(user.progress)
+      : user.progress || {};
+  
+  let total = 0;
+  
+  lessons.forEach(l => {
+    const key = String(l.lessonNumber);
+    const value = progressObj[key] || 0;
+    total += value;
+  });
+  
+  const avg = Math.round(total / lessons.length);
+  
+  if (avg < 100) {
+    return res.status(400).json({ message: "Курс ще не завершено" });
+  }
 
     // 📄 створюємо PDF в памʼяті
     const doc = new PDFDocument({ size: "A4", margin: 50 });
