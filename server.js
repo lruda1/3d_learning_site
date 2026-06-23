@@ -97,8 +97,8 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
 
     // 7. ID ТА ДАТА (справа знизу)
     const metaX = doc.page.width - 200;
-    doc.fontSize(10).fillColor("#777").text(`ID: ${certId}`, metaX, 510, { width: 150, align: "right" });
-    doc.fontSize(10).fillColor("#777").text(`Видано: ${date}`, metaX, 525, { width: 150, align: "right" });
+    doc.fontSize(10).fillColor("#777").text(`ID: ${certId}`, metaX, 520, { width: 150, align: "right" });
+    doc.fontSize(10).fillColor("#777").text(`Видано: ${date}`, metaX, 535, { width: 150, align: "right" });
 
     doc.end();
   } catch (err) {
