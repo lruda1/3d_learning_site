@@ -70,32 +70,35 @@ app.post("/api/certificate", authMiddleware, async (req, res) => {
     // 1. ФОН
     doc.rect(0, 0, doc.page.width, doc.page.height).fill("#ffffff");
 
-    // 2. РАМКА (відступили більше місця для дизайну)
+    // 2. РАМКА
     doc.lineWidth(5).strokeColor("#1f4f8f").rect(25, 25, doc.page.width - 50, doc.page.height - 50).stroke();
 
-    // 3. ЛОГО ТА ТЕКСТ (ЗЛІВА ВЕРХУ)
-    doc.image("frontend/images/logo.png", 50, 50, { width: 100 });
+    // 3. ЛОГО (тепер просто зліва вгорі, без зайвого тексту)
+    doc.image("frontend/images/logo.png", 50, 50, { width: 120 });
+
+    // 4. ЦЕНТРАЛЬНИЙ БЛОК
+    doc.fontSize(50).fillColor("#1f4f8f").text("СЕРТИФІКАТ", 0, 200, { align: "center" });
+    doc.fontSize(18).fillColor("#555").text("Цим документом підтверджується, що", 0, 270, { align: "center" });
     
-    doc.fontSize(10).fillColor("#777").text(`ID: ${certId}`, 50, 160);
-    doc.fontSize(10).fillColor("#777").text(`Видано: ${date}`, 50, 175);
+    doc.fontSize(36).fillColor("#000").text(user.name, 0, 310, { align: "center" });
+    doc.moveTo(250, 360).lineTo(doc.page.width - 250, 360).strokeColor("#1f4f8f").stroke();
 
-    // 4. ЦЕНТРАЛЬНИЙ БЛОК (Ім'я та Курс)
-    doc.fontSize(50).fillColor("#1f4f8f").text("СЕРТИФІКАТ", 0, 220, { align: "center" });
-    doc.fontSize(18).fillColor("#555").text("Цим документом підтверджується, що", 0, 290, { align: "center" });
-    
-    doc.fontSize(36).fillColor("#000").text(user.name, 0, 330, { align: "center" });
-    doc.moveTo(250, 380).lineTo(doc.page.width - 250, 380).strokeColor("#1f4f8f").stroke();
+    doc.fontSize(20).fillColor("#555").text("успішно завершив(ла) навчальний курс", 0, 390, { align: "center" });
+    doc.fontSize(26).fillColor("#1f4f8f").text("Artificial Intelligence Fundamentals", 0, 420, { align: "center" });
 
-    doc.fontSize(20).fillColor("#555").text("успішно завершив(ла) навчальний курс", 0, 410, { align: "center" });
-    doc.fontSize(28).fillColor("#1f4f8f").text("Artificial Intelligence Fundamentals", 0, 440, { align: "center" });
+    // 5. ПІДПИСИ (змістили вище, щоб не заходити на рамку)
+    const signX = doc.page.width - 220;
+    doc.image("frontend/images/signature.png", signX, 430, { width: 130 });
+    // Текст тепер вище (430 + 70 = 500), безпечна зона
+    doc.fontSize(12).fillColor("#333").text("Адміністратор платформи", signX - 10, 510, { width: 150, align: "center" });
 
-    // 5. ПІДПИСИ (внизу справа)
-    const signX = doc.page.width - 250;
-    doc.image("frontend/images/signature.png", signX, 480, { width: 150 });
-    doc.fontSize(12).fillColor("#333").text("Адміністратор платформи", signX, 550, { width: 150, align: "center" });
+    // 6. ПЕЧАТКА
+    doc.image("frontend/images/stamp.png", 70, 430, { width: 110, opacity: 0.8 });
 
-    // 6. ПЕЧАТКА (знизу зліва)
-    doc.image("frontend/images/stamp.png", 80, 480, { width: 120, opacity: 0.8 });
+    // 7. ID ТА ДАТА (справа знизу)
+    const metaX = doc.page.width - 200;
+    doc.fontSize(10).fillColor("#777").text(`ID: ${certId}`, metaX, 530, { width: 150, align: "right" });
+    doc.fontSize(10).fillColor("#777").text(`Видано: ${date}`, metaX, 545, { width: 150, align: "right" });
 
     doc.end();
   } catch (err) {
